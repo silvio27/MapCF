@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>居委会信息</title>
+    <!-- Import style -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/element-plus/dist/index.css"/>
+    <!-- Import Vue 3 -->
+    <script src="//cdn.jsdelivr.net/npm/vue@3"></script>
+    <!-- Import component library -->
+    <script src="//cdn.jsdelivr.net/npm/element-plus"></script>
+</head>
+<style>
+    #main {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        border: 1px solid #ccc;
+    }
+
+    #app, #app1 {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 480px;
+        z-index: 999;
+        display: none;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background-color: red;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        cursor: pointer;
+        z-index: 999;
+    }
+</style>
+<body>
+
+<div id="main">
+
+
+</div>
+<div id="app">
+    <button class="close-btn" @click="hideApp">X</button>
+    <el-table :data="tableData" style="width: 100%;" height="1200" border stripe>
+        <el-table-column prop="date" label="日期" width="140"></el-table-column>
+        <el-table-column prop="time" label="活动时间" width="140"></el-table-column>
+        <el-table-column prop="name" label="活动名称" width="140"></el-table-column>
+        <el-table-column prop="tag" label="标签" width="80">
+            <template #default="scope">
+                <el-tag
+                        :type="scope.row.tag === '老人' ? 'warning' : scope.row.tag === '小孩' ? 'primary' : 'success'"
+                        disable-transitions>{{ scope.row.tag }}
+                </el-tag>
+            </template>
+
+        </el-table-column>
+    </el-table>
+</div>
+<div id="app1">
+    <h1>居委会信息</h1>
+    <div id="communityInfo" class="info">
+        <p>正在加载信息...</p>
+    </div>
+</div>
+<object id="svgObject" type="image/svg+xml" data="cf.svg" style=""></object>
+
+<script src="https://fastly.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+
+
+<script>
+    const App = {
+        data() {
+            return {
+                tableData: [
+                    {date: '2025-04-09', time: '10:00 - 12:00', name: '游园会', tag: '小孩'},
+                    {date: '2025-04-10', time: '14:00 - 16:00', name: '露营', tag: '青年'},
+                    {date: '2025-04-11', time: '19:00 - 21:00', name: '唱歌', tag: '青年'},
+                    {date: '2025-04-12', time: '09:00 - 11:00', name: '绘画比赛', tag: '小孩'},
+                    {date: '2025-04-13', time: '15:00 - 17:00', name: '羽毛球比赛', tag: '青年'},
+                    {date: '2025-04-14', time: '13:00 - 15:00', name: '集体游戏', tag: '小孩'},
+                    {date: '2025-04-15', time: '11:00 - 13:00', name: '书法比赛', tag: '老人'},
+                    {date: '2025-04-16', time: '16:00 - 18:00', name: '露天电影', tag: '青年'},
+                    {date: '2025-04-17', time: '20:00 - 22:00', name: '星空观测', tag: '青年'},
+                    {date: '2025-04-18', time: '08:00 - 10:00', name: '晨跑活动', tag: '青年'},
+                    {date: '2025-04-19', time: '10:00 - 12:00', name: '音乐会', tag: '老人'},
+                    {date: '2025-04-20', time: '14:00 - 16:00', name: '手工艺工作坊', tag: '老人'},
+                    {date: '2025-04-21', time: '19:00 - 21:00', name: '魔术表演', tag: '小孩'},
+                    {date: '2025-04-22', time: '09:00 - 11:00', name: '街头篮球赛', tag: '青年'},
+                    {date: '2025-04-23', time: '15:00 - 17:00', name: '编程比赛', tag: '青年'},
+                    {date: '2025-04-24', time: '13:00 - 15:00', name: '登山活动', tag: '青年'},
+                    {date: '2025-04-25', time: '11:00 - 13:00', name: '羽毛球比赛', tag: '青年'},
+                    {date: '2025-04-26', time: '16:00 - 18:00', name: '瑜伽课程', tag: '老人'},
+                    {date: '2025-04-27', time: '20:00 - 22:00', name: '小品演出', tag: '老人'},
+                    {date: '2025-04-28', time: '08:00 - 10:00', name: '晨跑活动', tag: '青年'},
+                    {date: '2025-04-29', time: '14:00 - 16:00', name: '围棋比赛', tag: '老人'},
+                    {date: '2025-04-30', time: '19:00 - 21:00', name: '话剧表演', tag: '青年'},
+                    {date: '2025-05-01', time: '10:00 - 12:00', name: '亲子游戏', tag: '小孩'},
+                    {date: '2025-05-02', time: '14:00 - 16:00', name: '体育竞赛', tag: '青年'},
+                    {date: '2025-05-03', time: '09:00 - 11:00', name: '麻将比赛', tag: '老人'},
+                    {date: '2025-05-04', time: '15:00 - 17:00', name: '社区义工活动', tag: '青年'},
+                    {date: '2025-05-05', time: '11:00 - 13:00', name: '书法展示', tag: '老人'},
+                    {date: '2025-05-06', time: '16:00 - 18:00', name: '足球比赛', tag: '青年'},
+                    {date: '2025-05-07', time: '20:00 - 22:00', name: '电影放映', tag: '青年'},
+                    {date: '2025-05-08', time: '08:00 - 10:00', name: '晨跑活动', tag: '青年'},
+                    {date: '2025-05-09', time: '14:00 - 16:00', name: '广场舞', tag: '老人'},
+                    {date: '2025-05-10', time: '09:00 - 11:00', name: '书画展览', tag: '老人'},
+                    {date: '2025-05-11', time: '19:00 - 21:00', name: '舞蹈表演', tag: '小孩'},
+                    {date: '2025-05-12', time: '16:00 - 18:00', name: '羽毛球比赛', tag: '青年'},
+                    {date: '2025-05-13', time: '10:00 - 12:00', name: '乐器演奏', tag: '老人'},
+                    {date: '2025-05-14', time: '14:00 - 16:00', name: '围棋比赛', tag: '老人'},
+                    {date: '2025-05-15', time: '13:00 - 15:00', name: '野外生存训练', tag: '青年'},
+                    {date: '2025-05-16', time: '11:00 - 13:00', name: '亲子活动', tag: '小孩'},
+                    {date: '2025-05-17', time: '16:00 - 18:00', name: '徒步活动', tag: '青年'},
+                    {date: '2025-05-18', time: '20:00 - 22:00', name: '摇滚音乐会', tag: '青年'},
+                    {date: '2025-05-19', time: '09:00 - 11:00', name: '广场舞', tag: '老人'},
+                    {date: '2025-05-20', time: '13:00 - 15:00', name: '儿童故事会', tag: '小孩'},
+                    {date: '2025-05-21', time: '14:00 - 16:00', name: '登山比赛', tag: '青年'},
+                    {date: '2025-05-22', time: '09:00 - 11:00', name: '老年健身活动', tag: '老人'},
+                    {date: '2025-05-23', time: '20:00 - 22:00', name: '相声表演', tag: '老人'},
+                    {date: '2025-05-24', time: '10:00 - 12:00', name: '书法培训', tag: '老人'},
+                    {date: '2025-05-25', time: '15:00 - 17:00', name: '骑行活动', tag: '青年'},
+                    {date: '2025-05-26', time: '14:00 - 16:00', name: '传统舞蹈', tag: '老人'},
+                    {date: '2025-05-27', time: '19:00 - 21:00', name: '绘画课程', tag: '小孩'},
+                    {date: '2025-05-28', time: '08:00 - 10:00', name: '晨跑活动', tag: '青年'},
+                    {date: '2025-05-29', time: '14:00 - 16:00', name: '街舞比赛', tag: '青年'},
+                    {date: '2025-05-30', time: '19:00 - 21:00', name: '舞蹈大赛', tag: '青年'},
+                    {date: '2025-05-31', time: '09:00 - 11:00', name: '绘画比赛', tag: '小孩'},
+                    {date: '2025-06-01', time: '16:00 - 18:00', name: '音乐游戏', tag: '小孩'},
+                    {date: '2025-06-02', time: '20:00 - 22:00', name: '灯光秀', tag: '青年'},
+                    {date: '2025-06-03', time: '10:00 - 12:00', name: '书法展览', tag: '老人'},
+                    {date: '2025-06-04', time: '13:00 - 15:00', name: '骑行比赛', tag: '青年'}
+                ]
+
+            };
+        },
+        methods: {
+            hideApp() {
+                document.getElementById('app').style.display = 'none';
+            }
+        }
+    };
+    const app = Vue.createApp(App);
+    app.use(ElementPlus);
+    app.mount("#app");
+</script>
+
+<script>
+    // 初始化 ECharts
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 获取 SVG 内容并注册地图
+    var svgObject = document.getElementById('svgObject');
+
+    // 等待 SVG 加载完成
+    svgObject.onload = function () {
+        var svgDoc = svgObject.contentDocument;  // 获取 SVG 文档
+        var svgContent = svgDoc.documentElement.outerHTML;  // 获取 SVG 的 XML 字符串
+
+        svgObject.style.display = "none"
+
+        // 注册地图
+        echarts.registerMap('cf', {svg: svgContent});
+
+        const data = [
+            {
+                value: [894.0499784393191, 404.103543216557],
+                name: '长风一村',
+                index: 1,
+                address: '长风一村37号',
+                phone: '62574725'
+            },
+            {
+                value: [707.093611673449, 340.2110475036418],
+                name: '长二一委',
+                index: 2,
+                address: '长风二村137号101室',
+                phone: '62223425'
+            },
+            {
+                value: [769.9070495754273, 336.6860038145435],
+                name: '长二二委',
+                index: 3,
+                address: '长风二村46号',
+                phone: '62436551'
+            },
+            {
+                value: [806.2596764465688, 486.9435282152614],
+                name: '长风三村',
+                index: 4,
+                address: '枣阳路465弄12号101室',
+                phone: '62862292'
+            },
+            {
+                value: [733.5544227042859, 456.47656474230473],
+                name: '长四一委',
+                index: 5,
+                address: '怒江路131弄2号104室',
+                phone: '62869557'
+            },
+            {
+                value: [730.4384832581881, 526.7583100265115],
+                name: '长四二委',
+                index: 6,
+                address: '怒江路30弄3号105室',
+                phone: '62454636'
+            },
+            {
+                value: [1137.6873579741962, 589.5165305624088],
+                name: '师大一村',
+                index: 7,
+                address: '中山北路3671弄1号101室',
+                phone: '62232830'
+            },
+            {
+                value: [649.3540229244668, 414.5231697486255],
+                name: '师大三村',
+                index: 8,
+                address: '金沙江路895弄60号301室',
+                phone: '62652253'
+            },
+            {
+                value: [941.2868167285947, 692.8324922694218],
+                name: '新渡口',
+                index: 9,
+                address: '光复西路2213弄89号1楼',
+                phone: '62602971'
+            },
+            {
+                value: [819.3100306359535, 715.966020666302],
+                name: '95弄',
+                index: 10,
+                address: '大渡河路21弄16号1楼',
+                phone: '62864687'
+            },
+            {
+                value: [1041.3919032460049, 686.1027385539664],
+                name: '海鑫',
+                index: 11,
+                address: '光复西路2077弄32号二楼',
+                phone: '62600095'
+            },
+            {
+                value: [394.49432734779276, 483.3689078758541],
+                name: '中江',
+                index: 12,
+                address: '中江路624-626号',
+                phone: '52819258'
+            },
+            {
+                value: [1144.6560952369705, 510.3740270395594],
+                name: '曹家巷',
+                index: 13,
+                address: '中山北路3676弄4号底楼',
+                phone: '62236347'
+            },
+            {
+                value: [1159.905815810657, 616.3935422502618],
+                name: '中山桥',
+                index: 14,
+                address: '凯旋北路1888弄8号201室',
+                phone: '52681289'
+            },
+            {
+                value: [1538.3400570706726, 482.83569958478137],
+                name: '隆德',
+                index: 15,
+                address: '光复西路1145弄19号',
+                phone: '52359419'
+            },
+            {
+                value: [1385.277762454008, 322.02978188530903],
+                name: '普陀二村',
+                index: 16,
+                address: '宁夏路312弄1号2室',
+                phone: '62441804'
+            },
+            {
+                value: [1353.0637988495394, 243.24411681535972],
+                name: '普四一委',
+                index: 17,
+                address: '白玉路100号',
+                phone: '62440226'
+            },
+            {
+                value: [1304.9341080195418, 265.92944879892536],
+                name: '普四二委',
+                index: 18,
+                address: '白兰路88号',
+                phone: '62446154'
+            },
+            {
+                value: [1252.8631322186761, 348.79071013563],
+                name: '白玉一委',
+                index: 19,
+                address: '白玉新村85号101室',
+                phone: '62035413'
+            },
+            {
+                value: [1319.1419847396864, 348.93202965060016],
+                name: '白玉二委',
+                index: 20,
+                address: '白玉新村18号107室',
+                phone: '62224511'
+            },
+            {
+                value: [1428.9129124271094, 511.34752116576476],
+                name: '曹家村',
+                index: 21,
+                address: '白玉路678弄7号203室',
+                phone: '52365195'
+            },
+            {
+                value: [1318.9541357522362, 397.798554356354],
+                name: '金沙',
+                index: 22,
+                address: '顺义路南林家港12号底楼',
+                phone: '62869103'
+            },
+            {
+                value: [1399.8139052518704, 366.4953486037123],
+                name: '锦绿',
+                index: 23,
+                address: '宁夏路353弄12号101室',
+                phone: '62604728'
+            },
+            {
+                value: [1236.1721355561554, 640.5208417449916],
+                name: '清水湾',
+                index: 24,
+                address: '凯旋北路1555弄70号2楼',
+                phone: '52682500'
+            },
+            {
+                value: [1443.6186309742889, 395.79622298447606],
+                name: '世纪同乐',
+                index: 25,
+                address: '顺义路130号三楼',
+                phone: '52360276'
+            },
+            {
+                value: [95.63242289642241, 503.6155077860561],
+                name: '紫御豪庭',
+                index: 26,
+                address: '同普路689弄5号三楼',
+                phone: '52788996'
+            },
+            {
+                value: [243.66204039899952, 437.3861670713435],
+                name: '雅仕汇都',
+                index: 27,
+                address: '泸定路555弄19号二楼',
+                phone: '52855850'
+            }
+        ];
+
+        const data1 = [
+            {value: [1142.9077128588845, 433.78936404719434], name: '长风新村街道办事处', index: 99, address: '', phone: ''},
+            {value: [666.3843221299296, 804.466509790403], name: '党群服务中心\n【可点击】', index: 88, address: '', phone: ''},
+        ];
+
+        const data3 = [
+            [623.7954938271605, 709.085324074074, 20, "事件A"],
+            [822.2521296296296, 610.3060030864198, 40, "事件B"]
+        ]
+
+        const data4 = [
+            {value: 1048, name: '服务A'},
+            {value: 735, name: '服务B'},
+            {value: 580, name: '服务C'},
+            {value: 484, name: '服务D'},
+            {value: 300, name: '服务E'}
+        ]
+
+        const data5 = [
+            {
+                value: [3, 4, 5, 5, 3, 4],
+                name: 'A',
+            },
+            {
+                value: [6, 2, 5, 3, 6, 4],
+                name: 'B',
+            }
+        ]
+
+
+        const series = [
+            {
+                name: 'A组 - 居委会',
+                type: 'scatter',
+                coordinateSystem: 'geo',
+                geoIndex: 0,
+                // symbol: 'circle',
+                symbol: 'image://pin.png',
+                symbolSize: 30,
+                data: data,
+                itemStyle: {
+                    color: 'green'
+                },
+                emphasis: {
+                    label: {
+                        color: '#000',      // 名称颜色
+                        backgroundColor: "#fff",
+                        fontSize: 50,        // 名称字体大小
+                        borderRadius: 10
+                    }
+
+                },
+                label: {
+                    show: true, // 显示名称
+                    position: 'top',  // 名称显示在点的右侧
+                    formatter: '{b}',   // 显示每个点的名称
+                    color: '#000',      // 名称颜色
+                    backgroundColor: "#fff",
+                    fontSize: 20,        // 名称字体大小
+                    borderRadius: 5
+                }
+            },
+            {
+                name: 'B组',
+                type: 'scatter',
+                coordinateSystem: 'geo',
+                geoIndex: 0,
+                symbol: 'image://dh.svg',
+                symbolSize: 50,
+                data: data1,
+                itemStyle: {
+                    color: 'blue'
+                },
+                emphasis: {
+                    label: {
+                        color: '#f00',      // 名称颜色
+                        fontSize: 30,        // 名称字体大小
+                    },
+                },
+                label: {
+                    show: true, // 显示名称
+                    position: 'bottom',  // 名称显示在点的右侧
+                    formatter: '{b}',   // 显示每个点的名称
+                    color: '#f00',      // 名称颜色
+                    fontSize: 20,        // 名称字体大小
+                    fontWeight: 800
+                }
+            },
+            {
+                name: "涟漪图",
+                type: 'effectScatter',
+                coordinateSystem: 'geo',
+                geoIndex: 0,
+                symbolSize: function (params) {
+                    return (params[2] / 10) * 15 + 5;
+                },
+                itemStyle: {
+                    color: '#0b6fde'
+                },
+                encode: {
+                    tooltip: 2
+                },
+                data: data3,
+                tooltip: {
+                    trigger: 'item',
+                    formatter: function (params) {
+                        const data = params.data;
+                        return `${data[3]}`;
+                    }
+                },
+
+            },
+            {
+                name: "pie",
+                type: "pie",
+                coordinateSystem: 'geo',
+                geoIndex: 0,
+                animationDuration: 0,
+                radius: ['10%', '20%'],
+                center: [200, 200],
+                data: data4
+            },
+            {
+                name: "radar",
+                type: "radar",
+                data: data5
+
+            }
+        ];
+
+        // 配置ECharts的Option
+        var option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: function (params) {
+                    const data = params.data;
+                    return `
+                        <b>序号：</b>${data.index}<br/>
+                        <b>居委会：</b>${data.name}<br/>
+                        <b>地址：</b>${data.address}<br/>
+                        <b>电话：</b>${data.phone}
+                      `;
+                }
+            },
+            geo: [
+                {
+                    map: 'cf',  // 设置地图
+                    roam: false,     // 启用缩放和平移
+                    layoutCenter: ['50%', '60%'], // 地图居中
+                    layoutSize: '170%',
+                    selectedMode: 'single',  // 单选模式
+                }
+            ],
+            radar: {
+                // shape: 'circle',
+                indicator: [
+                    {name: '能力1', max: 6},
+                    {name: '能力2', max: 6},
+                    {name: '能力3', max: 6},
+                    {name: '能力4', max: 6},
+                    {name: '能力5', max: 6},
+                    {name: '能力6', max: 6}
+                ],
+                center: ['90%', '80%'],
+                radius: 120,
+            },
+            series: series
+
+            // 制作按钮结束
+        };
+
+        // 设置图表选项
+        myChart.setOption(option);
+        // 获得坐标点位置，并复制到剪切板
+        // myChart.getZr().on('click', function (params) {
+        //     var pixelPoint = [params.offsetX, params.offsetY];
+        //     var dataPoint = myChart.convertFromPixel({geoIndex: 0}, pixelPoint);
+        //     // console.log(dataPoint);
+        //     navigator.clipboard.writeText(dataPoint).then(function () {
+        //         console.log('Data copied to clipboard:', dataPoint);
+        //     }).catch(function (err) {
+        //         console.error('Failed to copy data to clipboard:', err);
+        //     });
+        //
+        // });
+
+
+        // 添加点击事件，跳转到指定 URL
+        myChart.on('click', function (params) {
+            console.log(params)
+            if (params.seriesName === 'A组 - 居委会') {
+
+                // 查找对应的居委会数据
+                const community = data.find(item => item.name === params.data.name);
+                document.getElementById("app1").style.display = "block"
+                const infoElement = document.getElementById('communityInfo');
+                infoElement.innerHTML = `
+                <b>居委会名称：</b>${community.name}<br/>
+                <b>居委会地址：</b>${community.address}<br/>
+                <b>居委会电话：</b>${community.phone}<br/>
+                <br/>
+                <a href="community.html?name=${community.name}" target="_blank">点击这里查看更多</a>
+              `
+                // const name = encodeURIComponent(params.data.name); // 获取居委会名称并进行URL编码
+                // window.open(`community.html?name=${name}`, '_blank'); // 使用正确的 URL 参数传递
+            }
+            if (params.seriesName === 'B组') {
+                document.getElementById("app").style.display = "block"
+            }
+
+        });
+
+
+        // 适应窗口变化
+        window.addEventListener('resize', function () {
+            myChart.resize();
+        });
+
+    };
+</script>
+
+
+</body>
+</html>
