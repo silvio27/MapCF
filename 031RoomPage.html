@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>房态图</title>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/element-plus/dist/index.css"/>
+    <script src="//cdn.jsdelivr.net/npm/vue@3"></script>
+    <script src="//cdn.jsdelivr.net/npm/element-plus"></script>
+</head>
+<style>
+    #app {
+        width: 99%;
+        /*font-size: 30px;*/
+        margin: 0px auto;
+        border: 1px solid black;
+    }
+
+    .card-container {
+        display: block;
+        padding: 30px;
+    }
+
+    .card-item {
+        width: 100%;
+    }
+
+    .el-tag {
+        margin: 0 30px;
+        padding: 0 30px;
+    }
+
+</style>
+<style>
+    .container {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        /*max-width: 600px;*/
+        margin: 20px auto;
+    }
+
+    .avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 20px;
+        background: #666666;
+    }
+
+    .info {
+        flex: 1;
+    }
+
+    .info h3 {
+        margin: 5px 0;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .info p {
+        margin: 5px 0;
+        color: #666;
+    }
+
+    .tags {
+        margin-top: 10px;
+    }
+
+    .el-tag {
+        margin-right: 10px;
+    }
+</style>
+<body>
+<div id="app">
+    <div class="card-container">
+        <room-card
+                v-for="(room, i) in tableData"
+                :key="i"
+                :room="room"
+                :tag-type-map="tagTypeMap"
+        ></room-card>
+    </div>
+    <div style="width: 95%;margin: 0 auto">
+        <el-collapse v-model="activeNames">
+            <el-collapse-item title="走访记录" name="1">
+                <el-timeline>
+                    <el-timeline-item center color="red" size="large" timestamp="2025/3/12" placement="top">
+                        <div style="border: 2px solid #333333;padding: 10px;border-radius: 10px">
+                            <h2 style="color: red">特别提示【长驻】</h2>
+                            <h3>老人行动不便，致电咨询，需要申请长护险复审</h3>
+                        </div>
+
+                    </el-timeline-item>
+                    <el-timeline-item
+                            v-for="(record, index) in timelineData"
+                            :key="index"
+                            :timestamp="record.timestamp"
+                            placement="top"
+                    >
+                        <el-card>
+                            <p>居民:{{ record.personName }}<strong style="padding-left: 50px">{{ record.user }}</strong>
+                            </p>
+                            <p>{{ record.record }}</p>
+
+                        </el-card>
+                    </el-timeline-item>
+                </el-timeline>
+            </el-collapse-item>
+        </el-collapse>
+
+    </div>
+    <!--    <el-divider/>-->
+    <div style="width: 95%;margin: 0 auto">
+
+        <div class="container">
+            <!-- 头像 -->
+            <div class="avatar"></div>
+
+            <!-- 信息 -->
+            <div class="info">
+                <h3>李四</h3>
+                <p>年龄: 30</p>
+                <p>联系方式: 123-4567-8901</p>
+
+                <!-- 标签 -->
+                <div class="tags">
+                    <el-tag type="warning">党员</el-tag>
+                    <el-tag type="info">社区达人</el-tag>
+                    <el-tag type="success">志愿者</el-tag>
+                    <el-tag type="info">外籍</el-tag>
+
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <!-- 头像 -->
+            <div class="avatar"></div>
+
+            <!-- 信息 -->
+            <div class="info">
+                <h3>张爷爷</h3>
+                <p>年龄: 80</p>
+                <p>联系方式: 123-4567-8901</p>
+
+                <!-- 标签 -->
+                <div class="tags">
+                    <el-tag type="success">楼组长</el-tag>
+                    <el-tag type="success">志愿者</el-tag>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <!-- 头像 -->
+            <div class="avatar"></div>
+
+            <!-- 信息 -->
+            <div class="info">
+                <h3>王奶奶</h3>
+                <p>年龄: 77</p>
+                <p>联系方式: 123-4567-8901</p>
+
+                <!-- 标签 -->
+                <div class="tags">
+                    <el-tag type="warning">党员</el-tag>
+                    <el-tag type="danger">长护险</el-tag>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/x-template" id="room-card-template">
+    <el-card class="card-item">
+        <template #header>
+
+            <div class="card-header">
+                <span>房间号：{{ room.index }}</span>
+            </div>
+
+
+        </template>
+        <div>
+            <el-tag
+                    v-for="(tag, i) in room.tags"
+                    :key="i"
+                    size="large"
+                    :type="tagTypeMap[tag] || 'default'"
+            >{{ tag }}
+            </el-tag>
+            <el-input-tag
+                    v-model="input"
+                    placeholder="新增加标签"
+                    aria-label="Please click the Enter key after input"
+                    style="margin-top: 30px;width: 95%"
+            />
+        </div>
+        <!--        <template #footer>当前人数：<strong>{{ room.peopleCount }}</strong></template>-->
+    </el-card>
+
+</script>
+
+
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                tagTypeMap: {
+                    党员: "warning",
+                    长护险: "danger",
+                    志愿者: "success",
+                    社区达人: "success",
+                    EE: "primary",
+                    楼组长: "success",
+                    外籍: "info",
+                    HH: "warning",
+                    II: "danger"
+                },
+                tableData: [
+                    {
+                        "index": 301,
+                        "tags": ["党员", "楼组长", "社区达人", "长护险", "外籍"],
+                        "peopleCount": 5,
+                        "badgeCount": 0,
+                        "badgeType": ""
+                    }],
+                activeNames: ['1'],
+                timelineData: [
+                    {
+                        timestamp: "2024/7/5",
+                        personName: "张爷爷",
+                        record: "了解了居民的生活情况，并为几位老年人提供了帮助，建议增加社区健康讲座。",
+                        user: "工作人员A"
+                    },
+                    {
+                        timestamp: "2024/9/14",
+                        personName: "李四",
+                        record: "走访了解社区设施使用情况，向居民询问了对社区改进的建议，确保设施维护及时。",
+                        user: "工作人员B"
+                    },
+                    {
+                        timestamp: "2025/1/13",
+                        personName: "王奶奶",
+                        record: "解决了几位居民关于垃圾分类的疑问，并向他们提供了相关宣传资料。",
+                        user: "工作人员A"
+                    },
+                    {
+                        timestamp: "2025/3/2",
+                        personName: "王奶奶",
+                        record: "了解居民关于加装电梯的需求，并与相关部门进行了反馈。",
+                        user: "工作人员B"
+                    },
+                    {
+                        timestamp: "2025/3/7",
+                        personName: "张爷爷",
+                        record: "工作人员协助社区居民填写了满意度调查表，收集了大家对社区服务的意见和建议，进一步提升服务质量。",
+                        user: "工作人员B"
+                    }
+                ]
+
+            };
+        },
+
+    });
+
+    app.component('room-card', {
+        props: ['room', 'tagTypeMap'],
+        template: '#room-card-template'
+    });
+
+    app.component('timeline-card', {
+        props: ['room', 'tagTypeMap'],
+        template: '#timeline-template'
+    });
+
+    app.use(ElementPlus);
+    app.mount("#app");
+</script>
+</body>
+</html>

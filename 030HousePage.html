@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>房态图</title>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/element-plus/dist/index.css"/>
+    <script src="//cdn.jsdelivr.net/npm/vue@3"></script>
+    <script src="//cdn.jsdelivr.net/npm/element-plus"></script>
+</head>
+<style>
+    #app {
+        width: 99%;
+        /*font-size: 30px;*/
+        margin: 0px auto;
+    }
+
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .card-item {
+        width: 300px;
+        height: 200px;
+    }
+
+</style>
+<body>
+<div id="app">
+    <div class="card-container">
+        <room-card
+                v-for="(room, i) in tableData"
+                :key="i"
+                :room="room"
+                :tag-type-map="tagTypeMap"
+                @click="goToRoomPage()"
+        ></room-card>
+    </div>
+</div>
+
+<script type="text/x-template" id="room-card-template">
+    <el-badge :value="room.badgeCount" :show-zero="false" :type="room.badgeType">
+        <el-card class="card-item" shadow="always">
+            <template #header>
+
+                <div class="card-header">
+                    <span>房间号：{{ room.index }}</span>
+                </div>
+
+
+            </template>
+            <div>
+                <el-tag
+                        v-for="(tag, i) in room.tags"
+                        :key="i"
+                        style="margin: 2px"
+                        size="large"
+                        :type="tagTypeMap[tag] || 'default'"
+                >{{ tag }}
+                </el-tag>
+            </div>
+            <template #footer>当前人数：<strong>{{ room.peopleCount }}</strong></template>
+        </el-card>
+    </el-badge>
+</script>
+
+<script>
+    // 可选标签池
+    const allTags = ["党员", "独居", "志愿者", "社区达人", "EE", "FF", "GG", "HH", "II"];
+
+    const app = Vue.createApp({
+        data() {
+            return {
+                tagTypeMap: {
+                    党员: "warning",
+                    独居: "warning",
+                    志愿者: "success",
+                    社区达人: "danger",
+                    EE: "primary",
+                    FF: "success",
+                    GG: "info",
+                    HH: "warning",
+                    II: "danger"
+                },
+                tableData: [
+                    {"index": 101, "tags": ["HH"], "peopleCount": 2, "badgeCount": 0, "badgeType": ""},
+                    {
+                        "index": 102,
+                        "tags": ["党员", "志愿者", "独居", "FF"],
+                        "peopleCount": 3,
+                        "badgeCount": 0,
+                        "badgeType": ""
+                    },
+                    {
+                        "index": 103,
+                        "tags": ["FF", "志愿者", "HH", "独居"],
+                        "peopleCount": 5,
+                        "badgeCount": 0,
+                        "badgeType": ""
+                    },
+                    {
+                        "index": 201,
+                        "tags": ["HH", "党员", "II", "社区达人", "EE"],
+                        "peopleCount": 1,
+                        "badgeCount": 0,
+                        "badgeType": ""
+                    },
+                    {
+                        "index": 202,
+                        "tags": ["GG", "FF", "社区达人", "II"],
+                        "peopleCount": 5,
+                        "badgeCount": 3,
+                        "badgeType": "primary"
+                    },
+                    {"index": 203, "tags": ["独居"], "peopleCount": 4, "badgeCount": 0, "badgeType": ""},
+                    {
+                        "index": 301,
+                        "tags": ["FF", "党员", "GG", "EE", "独居"],
+                        "peopleCount": 5,
+                        "badgeCount": 1,
+                        "badgeType": ""
+                    },
+                    {"index": 302, "tags": ["II"], "peopleCount": 5, "badgeCount": 0, "badgeType": ""},
+                    {"index": 303, "tags": ["社区达人", "党员"], "peopleCount": 1, "badgeCount": 0, "badgeType": ""},
+                    {"index": 401, "tags": [], "peopleCount": 0, "badgeCount": 0, "badgeType": ""},
+                    {
+                        "index": 402,
+                        "tags": ["II", "党员", "志愿者", "HH", "独居"],
+                        "peopleCount": 5,
+                        "badgeCount": 0,
+                        "badgeType": ""
+                    },
+                    {
+                        "index": 403,
+                        "tags": ["志愿者", "独居", "HH"],
+                        "peopleCount": 4,
+                        "badgeCount": 2,
+                        "badgeType": "warning"
+                    },
+                    {"index": 501, "tags": ["EE"], "peopleCount": 0, "badgeCount": 0, "badgeType": ""},
+                    {
+                        "index": 502,
+                        "tags": ["党员", "志愿者", "FF", "独居"],
+                        "peopleCount": 1,
+                        "badgeCount": 0,
+                        "badgeType": ""
+                    },
+                    {
+                        "index": 503,
+                        "tags": ["II", "党员", "HH", "GG"],
+                        "peopleCount": 1,
+                        "badgeCount": 0,
+                        "badgeType": ""
+                    },
+                    {"index": 601, "tags": ["党员", "EE"], "peopleCount": 5, "badgeCount": 0, "badgeType": ""},
+                    {
+                        "index": 602,
+                        "tags": ["党员", "HH", "FF", "独居"],
+                        "peopleCount": 3,
+                        "badgeCount": 0,
+                        "badgeType": ""
+                    },
+                    {"index": 603, "tags": ["II", "EE"], "peopleCount": 1, "badgeCount": 0, "badgeType": ""}
+                ]
+
+            };
+        },
+        methods: {
+            // 跳转到房间页面
+            goToRoomPage(roomIndex) {
+                window.location.href = `031RoomPage.html?room=${roomIndex}`;
+            }
+        }
+    });
+
+    app.component('room-card', {
+        props: ['room', 'tagTypeMap'],
+        template: '#room-card-template'
+    });
+
+    app.use(ElementPlus);
+    app.mount("#app");
+</script>
+</body>
+</html>
