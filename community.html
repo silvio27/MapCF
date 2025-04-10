@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>居委会信息</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .info {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        .info b {
+            color: #333;
+        }
+
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>居委会信息</h1>
+    <div id="communityInfo" class="info">
+        <p>正在加载信息...</p>
+    </div>
+    <div>
+        成立于2020年1月，总占地面积0.15平方公里，东至中江路，西至丹巴路，南至同普路，北至金沙江路，共有四个小区组成：雅仕名邸、长风汇都、瑞仕璟庭、和畅公寓。现有居民户数2567户，实际居住人口约6100人。党员127人，长护险13人左右，独居老人2人，其中孤老0人；残疾人17人；精访在册3人。
+        雅仕汇都居委会工作人员在日常“走四百”工作中，广泛听取社区居民建议后，收集民情民意，以“居民议事协商”为抓手，做到居民有需求，社区有回应。
+        居委会成立至今，突出特色和实效，有序开展各类活动：关心关爱社区高龄老人、独居老人等特殊群体；积极参加“创文创卫”创建工作，组织“清洁家园”、“文明修身”、“文明礼仪”等文明树新风活动；开展平安夜巡和反诈宣传，维护社区和谐稳定。一场场丰富多彩的活动让社区“活”起来、队伍“动”起来、群众“乐”起来。
+        和畅公寓新时代文明实践站位于丹巴路586弄和畅公寓3号楼201室。自成立以来，始终奉行“服务社区、弘扬新风”的宗旨，促进文明社区的创建，满足社区群众日益增长的文化生活需要，用微光温暖你我，用汗水守护家园。
+        雅仕汇都居委会获得荣誉：上海市妇女之家示范点（2020年年底）、上海市儿童友好社区示范点（2021年）、上海市节水型小区、全国防灾减灾示范社区、上海市无违建居村、上海市垃圾分类银奖。
+        近年来，雅仕汇都居民区党总支深化党建引领，与结对单位切实强化交流合作，全力构建“资源共享、优势互补、互相促进、共同发展”的党建共建联建崭新格局，定期与共建单位开展社区法律公益课堂、联合结对单位开展公益活动、慰问困难党员等。雅仕汇都居民区将以结对共建为抓手，充分挖掘和发挥各自的资源和优势，联手服务、联心发展，进一步做精做优基层治理服务，以更实举措回应居民群众美好生活新期盼。
+        下一步，雅仕汇都居委会将继续夯实阵地建设，扎实开展多层次、多样化的活动，扩大“服务圈”，织好“贴心网”，让文明之花绽放长风，不断提升人民群众的获得感、幸福感、安全感。
+    </div>
+</div>
+
+<script>
+    // 模拟居委会数据（也可以从服务器或本地文件中加载）
+    const communityData = [
+        {name: '长风一村', index: 1, address: '长风一村37号', phone: '62574725'},
+        {name: '长二一委', index: 2, address: '长风二村137号101室', phone: '62223425'},
+        {name: '长二二委', index: 3, address: '长风二村46号', phone: '62436551'},
+        {name: '长风三村', index: 4, address: '枣阳路465弄12号101室', phone: '62862292'},
+        {name: '长四一委', index: 5, address: '怒江路131弄2号104室', phone: '62869557'},
+        {name: '长四二委', index: 6, address: '怒江路30弄3号105室', phone: '62454636'},
+        {name: '师大一村', index: 7, address: '中山北路3671弄1号101室', phone: '62232830'},
+        {name: '师大三村', index: 8, address: '金沙江路895弄60号301室', phone: '62652253'},
+        {name: '新渡口', index: 9, address: '光复西路2213弄89号1楼', phone: '62602971'},
+        {name: '95弄', index: 10, address: '大渡河路21弄16号1楼', phone: '62864687'},
+        {name: '海鑫', index: 11, address: '光复西路2077弄32号二楼', phone: '62600095'},
+        {name: '中江', index: 12, address: '中江路624-626号', phone: '52819258'},
+        {name: '曹家巷', index: 13, address: '中山北路3676弄4号底楼', phone: '62236347'},
+        {name: '中山桥', index: 14, address: '凯旋北路1888弄8号201室', phone: '52681289'},
+        {name: '隆德', index: 15, address: '光复西路1145弄19号', phone: '52359419'},
+        {name: '普陀二村', index: 16, address: '宁夏路312弄1号2室', phone: '62441804'},
+        {name: '普四一委', index: 17, address: '白玉路100号', phone: '62440226'},
+        {name: '普四二委', index: 18, address: '白兰路88号', phone: '62446154'},
+        {name: '白玉一委', index: 19, address: '白玉新村85号101室', phone: '62035413'},
+        {name: '白玉二委', index: 20, address: '白玉新村18号107室', phone: '62224511'},
+        {name: '曹家村', index: 21, address: '白玉路678弄7号203室', phone: '52365195'},
+        {name: '金沙', index: 22, address: '顺义路南林家港12号底楼', phone: '62869103'},
+        {name: '锦绿', index: 23, address: '宁夏路353弄12号101室', phone: '62604728'},
+        {name: '清水湾', index: 24, address: '凯旋北路1555弄70号2楼', phone: '52682500'},
+        {name: '世纪同乐', index: 25, address: '顺义路130号三楼', phone: '52360276'},
+        {name: '紫御豪庭', index: 26, address: '同普路689弄5号三楼', phone: '52788996'},
+        {name: '雅仕汇都', index: 27, address: '泸定路555弄19号二楼', phone: '52855850'}
+    ];
+
+    // 从URL中获取参数
+    const urlParams = new URLSearchParams(window.location.search);
+    const nameParam = urlParams.get('name');
+
+    // 查找对应的居委会数据
+    const community = communityData.find(item => item.name === nameParam);
+
+    // 如果找到该居委会，展示信息；否则显示未找到
+    if (community) {
+        const infoElement = document.getElementById('communityInfo');
+        infoElement.innerHTML = `
+        <b>序号：</b>${community.index}<br/>
+        <b>居委会名称：</b>${community.name}<br/>
+        <b>居委会地址：</b>${community.address}<br/>
+        <b>居委会电话：</b>${community.phone}<br/>
+        <br/>
+        <a href="community.html?name=${community.name}" target="_self">点击这里查看更多</a>
+      `;
+    } else {
+        document.getElementById('communityInfo').innerText = '未找到该居委会信息。';
+    }
+</script>
+
+</body>
+</html>
