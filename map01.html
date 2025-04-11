@@ -2,23 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>居委会信息</title>
+    <title>微格分色2.0</title>
     <!-- Import style -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/element-plus/dist/index.css"/>
     <!-- Import Vue 3 -->
     <script src="//cdn.jsdelivr.net/npm/vue@3"></script>
     <!-- Import component library -->
     <script src="//cdn.jsdelivr.net/npm/element-plus"></script>
+    <script src="https://fastly.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 </head>
 <style>
     #main {
-        position: relative;
+        position: absolute;
         width: 1920px;
         height: 1080px;
         border: 1px solid #ccc;
     }
 
-    #app, #app1 {
+    #right-part {
+        position: absolute;
+        width: 320px;
+        height: 1080px;
+        left: 1600px;
+        top: 0px;
+        border: 2px solid #007BFF;
+    }
+
+    #map {
+        width: 1600px;
+        height: 800px;
+        border: 1px solid #ccc;
+    }
+
+    #base_info {
+        width: 1600px;
+        height: 280px;
+        border: 1px solid #000;
+
+    }
+
+    #activity_list, #community_info {
         position: absolute;
         right: 0;
         top: 0;
@@ -27,6 +50,12 @@
         display: none;
         background: #f4f4f4;
     }
+
+    　　.el-col {
+        text-align: center;
+        margin-left: 10px;
+    }
+
 
     .close-btn {
         position: absolute;
@@ -47,12 +76,40 @@
     }
 </style>
 <body>
-
 <div id="main">
+    <div id="bb" style="display: flex;position: absolute;z-index: 999">
+        <el-button type="warning" onclick="show1()">显示位置</el-button>
+        <el-button type="success" onclick="fgl()">显示覆盖率</el-button>
+    </div>
+    <div id="map"></div>
+    <div id="base_info">
+        <el-row>
+            <el-col :span="3.5">
+                <div id="c_info" style="margin: 20px;font-size: x-large">
+                    <div><strong>人口数：</strong>{{data.userNum}}</div>
+                    <div><strong>户籍数：</strong>{{data.localNum}}</div>
+                    <div><strong>居住数：</strong>{{data.liveNum}}</div>
+                    <div><strong>楼宇数：</strong>{{data.buildingNum}}</div>
+                    <div><strong>房屋数：</strong>{{data.houseNum}}</div>
+                </div>
+            </el-col>
+            <el-col :span="16" style="overflow: hidden">
+                <div id="c_describe"
+                     style="margin: 20px;font-size: large;height: 200px;text-overflow: ellipsis ">
+                    长风新村街道系由原长风街道和白玉路街道于2000年5月撤二建一合并而成。长风新村街道位于区西南部。东至曹杨路与长寿路街道相邻，西至真北路与长征镇相接，南至苏州河与长宁区相连，北至金沙江路、中山北路与曹杨新村街道接壤。辖区面积5.8平方公里。所辖居民委员会27个，户籍人口8.95万人，常住人口10.71万人。区域内有轨道交通3、4、11、13、15号线，拥有6座横跨苏州河的桥梁，主干道金沙江路连接内、中、外环，周边交通十分便利。街道设置党政办公室（应急管理办公室、财务管理办公室）、社区党建办公室、社区党群办公室、社区管理办公室、社区服务办公室、社区平安办公室（信访办公室）、社会工作办公室、营商环境办公室，以及纪工委、监察室、人大工委、武装部、工会、团工委、妇联、司法所等机构。长风新村街道办事处是普陀区人民政府的派出机关，受区人民政府领导，依据法律、法规的规定，在本辖区范围内行使相应的政府管理职能。街道办事处的工作以社区管理和社区服务为重点，开展社会主义物质文明、精神文明建设，创建安定团结、环境整洁、方便生活的文明社区。
+                </div>
+            </el-col>
+        </el-row>
+    </div>
+    <div id="right-part">
+        <div id="r1" style="width: 100%;height: 300px;"></div>
+        <div id="r2" style="width: 100%;height: 500px;"></div>
 
+    </div>
 
 </div>
-<div id="app">
+</div>
+<div id="activity_list">
     <button class="close-btn" @click="hideApp">X</button>
     <el-table :data="tableData" style="width: 100%;" height="1200" border stripe>
         <el-table-column prop="date" label="日期" width="140"></el-table-column>
@@ -69,32 +126,14 @@
         </el-table-column>
     </el-table>
 </div>
-<div id="app1">
-    <button class="close-btn" onclick="hideApp()">X</button>
-    <h1>居委会信息</h1>
-    <div id="communityInfo" class="info">
-        <p>正在加载信息...</p>
-    </div>
-    <div>
-        雅仕汇都居委会成立于2020年1月，总占地面积0.15平方公里，东至中江路，西至丹巴路，南至同普路，北至金沙江路，共有四个小区组成：雅仕名邸、长风汇都、瑞仕璟庭、和畅公寓。现有居民户数2567户，实际居住人口约6100人。党员127人，长护险13人左右，独居老人2人，其中孤老0人；残疾人17人；精访在册3人。
-        雅仕汇都居委会工作人员在日常“走四百”工作中，广泛听取社区居民建议后，收集民情民意，以“居民议事协商”为抓手，做到居民有需求，社区有回应。
-        居委会成立至今，突出特色和实效，有序开展各类活动：关心关爱社区高龄老人、独居老人等特殊群体；积极参加“创文创卫”创建工作，组织“清洁家园”、“文明修身”、“文明礼仪”等文明树新风活动；开展平安夜巡和反诈宣传，维护社区和谐稳定。一场场丰富多彩的活动让社区“活”起来、队伍“动”起来、群众“乐”起来。
-        和畅公寓新时代文明实践站位于丹巴路586弄和畅公寓3号楼201室。自成立以来，始终奉行“服务社区、弘扬新风”的宗旨，促进文明社区的创建，满足社区群众日益增长的文化生活需要，用微光温暖你我，用汗水守护家园。
-        雅仕汇都居委会获得荣誉：上海市妇女之家示范点（2020年年底）、上海市儿童友好社区示范点（2021年）、上海市节水型小区、全国防灾减灾示范社区、上海市无违建居村、上海市垃圾分类银奖。
-        近年来，雅仕汇都居民区党总支深化党建引领，与结对单位切实强化交流合作，全力构建“资源共享、优势互补、互相促进、共同发展”的党建共建联建崭新格局，定期与共建单位开展社区法律公益课堂、联合结对单位开展公益活动、慰问困难党员等。雅仕汇都居民区将以结对共建为抓手，充分挖掘和发挥各自的资源和优势，联手服务、联心发展，进一步做精做优基层治理服务，以更实举措回应居民群众美好生活新期盼。
-        下一步，雅仕汇都居委会将继续夯实阵地建设，扎实开展多层次、多样化的活动，扩大“服务圈”，织好“贴心网”，让文明之花绽放长风，不断提升人民群众的获得感、幸福感、安全感。
-    </div>
-</div>
+
 <object id="svgObject" type="image/svg+xml" data="cf.svg" style=""></object>
 
-<script src="https://fastly.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
-
-
-<script>
+<script data-name="activity_list">
 
     function hideApp() {
-        // 隐藏 #app1 元素
-        document.getElementById('app1').style.display = 'none';
+        // 隐藏 #community_info 元素
+        document.getElementById('community_info').style.display = 'none';
     }
 
     const App = {
@@ -159,25 +198,22 @@
                     {date: '2025-06-03', time: '10:00 - 12:00', name: '书法展览', tag: '老人'},
                     {date: '2025-06-04', time: '13:00 - 15:00', name: '骑行比赛', tag: '青年'}
                 ]
-
             };
         },
         methods: {
             hideApp() {
-                document.getElementById('app').style.display = 'none';
+                document.getElementById('activity_list').style.display = 'none';
             }
         }
     };
-    const app = Vue.createApp(App);
-    app.use(ElementPlus);
-    app.mount("#app");
-
-
+    const activity_list = Vue.createApp(App);
+    activity_list.use(ElementPlus);
+    activity_list.mount("#activity_list");
 </script>
 
-<script>
+<script data-name="echarts-map">
     // 初始化 ECharts
-    var myChart = echarts.init(document.getElementById('main'));
+    var myChart = echarts.init(document.getElementById('map'));
 
     // 获取 SVG 内容并注册地图
     var svgObject = document.getElementById('svgObject');
@@ -386,7 +422,7 @@
 
         const data1 = [
             {value: [1142.9077128588845, 433.78936404719434], name: '长风新村街道办事处', index: 99, address: '', phone: ''},
-            {value: [666.3843221299296, 804.466509790403], name: '党群服务中心\n【可点击】', index: 88, address: '', phone: ''},
+            {value: [666.3843221299296, 770], name: '党群服务中心\n【可点击】', index: 88, address: '', phone: ''},
         ];
 
         const data3 = [
@@ -496,23 +532,514 @@
                 },
 
             },
+            // {
+            //     name: "pie",
+            //     type: "pie",
+            //     coordinateSystem: 'geo',
+            //     geoIndex: 0,
+            //     animationDuration: 0,
+            //     radius: ['10%', '20%'],
+            //     center: [200, 200],
+            //     data: data4
+            // },
+            // {
+            //     name: "radar",
+            //     type: "radar",
+            //     data: data5
+            //
+            // }
+        ];
+
+
+        const cList = [
             {
-                name: "pie",
-                type: "pie",
-                coordinateSystem: 'geo',
-                geoIndex: 0,
-                animationDuration: 0,
-                radius: ['10%', '20%'],
-                center: [200, 200],
-                data: data4
+                "userNum": 5116, // 人口总数
+                "liveNum": 4430,
+                "orgName": "曹家巷",
+                "committeeNum": 0,
+                "unLocalNum": 1975,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 855,
+                "orgId": "042CAA67F4668C96",
+                "localNum": 2610,
+                "addNum": 0,
+                "buildingNum": 74,
+                "villageNum": 5, // 小区数量？
+                "hzrbzNum": 864,
+                "rzhbzNum": 2586,
+                "houseNum": 1157
             },
             {
-                name: "radar",
-                type: "radar",
-                data: data5
-
+                "userNum": 2798,
+                "liveNum": 2621,
+                "orgName": "中山桥",
+                "committeeNum": 0,
+                "unLocalNum": 1120,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 642,
+                "orgId": "FD10547CC89A7F4D",
+                "localNum": 1023,
+                "addNum": 0,
+                "buildingNum": 22,
+                "villageNum": 3,
+                "hzrbzNum": 99,
+                "rzhbzNum": 1577,
+                "houseNum": 716
+            },
+            {
+                "userNum": 7150,
+                "liveNum": 7008,
+                "orgName": "师大一村",
+                "committeeNum": 0,
+                "unLocalNum": 2673,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 2528,
+                "orgId": "849F56D6E4965D72",
+                "localNum": 9652,
+                "addNum": 0,
+                "buildingNum": 380,
+                "villageNum": 1,
+                "hzrbzNum": 83,
+                "rzhbzNum": 3831,
+                "houseNum": 2128
+            },
+            {
+                "userNum": 2023,
+                "liveNum": 1818,
+                "orgName": "新渡口",
+                "committeeNum": 0,
+                "unLocalNum": 761,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 520,
+                "orgId": "F2A51E6342625935",
+                "localNum": 3239,
+                "addNum": 0,
+                "buildingNum": 200,
+                "villageNum": 3,
+                "hzrbzNum": 127,
+                "rzhbzNum": 1166,
+                "houseNum": 608
+            },
+            {
+                "userNum": 5825,
+                "liveNum": 5656,
+                "orgName": "长风一村",
+                "committeeNum": 0,
+                "unLocalNum": 2245,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 675,
+                "orgId": "57D77FA915605315",
+                "localNum": 2867,
+                "addNum": 0,
+                "buildingNum": 98,
+                "villageNum": 3,
+                "hzrbzNum": 3,
+                "rzhbzNum": 4151,
+                "houseNum": 1719
+            },
+            {
+                "userNum": 5540,
+                "liveNum": 5414,
+                "orgName": "长二一委",
+                "committeeNum": 0,
+                "unLocalNum": 2121,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1175,
+                "orgId": "47296E8561B496AD",
+                "localNum": 5543,
+                "addNum": 0,
+                "buildingNum": 82,
+                "villageNum": 2,
+                "hzrbzNum": 54,
+                "rzhbzNum": 3580,
+                "houseNum": 1913
+            },
+            {
+                "userNum": 8209,
+                "liveNum": 7808,
+                "orgName": "长风三村",
+                "committeeNum": 0,
+                "unLocalNum": 2778,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 2015,
+                "orgId": "D85821889A11534A",
+                "localNum": 4589,
+                "addNum": 0,
+                "buildingNum": 271,
+                "villageNum": 3,
+                "hzrbzNum": 416,
+                "rzhbzNum": 4965,
+                "houseNum": 2291
+            },
+            {
+                "userNum": 5771,
+                "liveNum": 5226,
+                "orgName": "长四一委",
+                "committeeNum": 0,
+                "unLocalNum": 1814,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1420,
+                "orgId": "C9B35BB8C577AAAB",
+                "localNum": 3843,
+                "addNum": 0,
+                "buildingNum": 89,
+                "villageNum": 3,
+                "hzrbzNum": 357,
+                "rzhbzNum": 3565,
+                "houseNum": 1914
+            },
+            {
+                "userNum": 3326,
+                "liveNum": 3162,
+                "orgName": "长四二委",
+                "committeeNum": 0,
+                "unLocalNum": 1177,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 894,
+                "orgId": "530401C874EEF563",
+                "localNum": 1671,
+                "addNum": 0,
+                "buildingNum": 44,
+                "villageNum": 4,
+                "hzrbzNum": 46,
+                "rzhbzNum": 2052,
+                "houseNum": 948
+            },
+            {
+                "userNum": 7537,
+                "liveNum": 7452,
+                "orgName": "长二二委",
+                "committeeNum": 0,
+                "unLocalNum": 2389,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 2608,
+                "orgId": "D8508FEC8314257E",
+                "localNum": 4530,
+                "addNum": 0,
+                "buildingNum": 74,
+                "villageNum": 4,
+                "hzrbzNum": 36,
+                "rzhbzNum": 4363,
+                "houseNum": 2236
+            },
+            {
+                "userNum": 9098,
+                "liveNum": 8898,
+                "orgName": "锦绿",
+                "committeeNum": 0,
+                "unLocalNum": 2113,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 2879,
+                "orgId": "6D0C9D4EB98FA69E",
+                "localNum": 5243,
+                "addNum": 0,
+                "buildingNum": 77,
+                "villageNum": 3,
+                "hzrbzNum": 114,
+                "rzhbzNum": 5535,
+                "houseNum": 2583
+            },
+            {
+                "userNum": 2827,
+                "liveNum": 2768,
+                "orgName": "曹家村",
+                "committeeNum": 0,
+                "unLocalNum": 897,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 546,
+                "orgId": "11A6A40629A6C88C",
+                "localNum": 2732,
+                "addNum": 0,
+                "buildingNum": 83,
+                "villageNum": 3,
+                "hzrbzNum": 16,
+                "rzhbzNum": 1900,
+                "houseNum": 835
+            },
+            {
+                "userNum": 4272,
+                "liveNum": 4185,
+                "orgName": "白玉一委",
+                "committeeNum": 0,
+                "unLocalNum": 1391,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 751,
+                "orgId": "92494917B5B211DB",
+                "localNum": 2270,
+                "addNum": 0,
+                "buildingNum": 40,
+                "villageNum": 3,
+                "hzrbzNum": 41,
+                "rzhbzNum": 2856,
+                "houseNum": 1351
+            },
+            {
+                "userNum": 6390,
+                "liveNum": 5924,
+                "orgName": "白玉二委",
+                "committeeNum": 0,
+                "unLocalNum": 2235,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1714,
+                "orgId": "98DEE502DAED12C5",
+                "localNum": 3732,
+                "addNum": 0,
+                "buildingNum": 92,
+                "villageNum": 5,
+                "hzrbzNum": 115,
+                "rzhbzNum": 3959,
+                "houseNum": 1872
+            },
+            {
+                "userNum": 5657,
+                "liveNum": 5453,
+                "orgName": "普四一委",
+                "committeeNum": 0,
+                "unLocalNum": 1886,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1511,
+                "orgId": "5B7D64DB5FE16879",
+                "localNum": 2535,
+                "addNum": 0,
+                "buildingNum": 20,
+                "villageNum": 3,
+                "hzrbzNum": 105,
+                "rzhbzNum": 3401,
+                "houseNum": 1591
+            },
+            {
+                "userNum": 4032,
+                "liveNum": 3522,
+                "orgName": "普四二委",
+                "committeeNum": 0,
+                "unLocalNum": 1525,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 774,
+                "orgId": "0BD9C161AE2536BB",
+                "localNum": 4524,
+                "addNum": 0,
+                "buildingNum": 41,
+                "villageNum": 5,
+                "hzrbzNum": 333,
+                "rzhbzNum": 2252,
+                "houseNum": 1143
+            },
+            {
+                "userNum": 6735,
+                "liveNum": 6373,
+                "orgName": "普陀二村",
+                "committeeNum": 0,
+                "unLocalNum": 2088,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1849,
+                "orgId": "3C3128D715901965",
+                "localNum": 2913,
+                "addNum": 0,
+                "buildingNum": 62,
+                "villageNum": 4,
+                "hzrbzNum": 282,
+                "rzhbzNum": 5536,
+                "houseNum": 1590
+            },
+            {
+                "userNum": 6983,
+                "liveNum": 6495,
+                "orgName": "金沙",
+                "committeeNum": 0,
+                "unLocalNum": 2195,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1846,
+                "orgId": "D53FB6FCBA9EE02D",
+                "localNum": 5283,
+                "addNum": 0,
+                "buildingNum": 140,
+                "villageNum": 7,
+                "hzrbzNum": 230,
+                "rzhbzNum": 4142,
+                "houseNum": 2358
+            },
+            {
+                "userNum": 5783,
+                "liveNum": 5444,
+                "orgName": "海鑫",
+                "committeeNum": 0,
+                "unLocalNum": 1415,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1559,
+                "orgId": "5CD4AAB10D26EBAB",
+                "localNum": 2284,
+                "addNum": 0,
+                "buildingNum": 79,
+                "villageNum": 2,
+                "hzrbzNum": 210,
+                "rzhbzNum": 3375,
+                "houseNum": 1757
+            },
+            {
+                "userNum": 4506,
+                "liveNum": 4245,
+                "orgName": "师大三村",
+                "committeeNum": 0,
+                "unLocalNum": 1439,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1534,
+                "orgId": "A08F924A3EFDFF90",
+                "localNum": 2375,
+                "addNum": 0,
+                "buildingNum": 64,
+                "villageNum": 3,
+                "hzrbzNum": 206,
+                "rzhbzNum": 2283,
+                "houseNum": 1131
+            },
+            {
+                "userNum": 2404,
+                "liveNum": 2344,
+                "orgName": "中江",
+                "committeeNum": 0,
+                "unLocalNum": 900,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 736,
+                "orgId": "715FE0491A79FA9E",
+                "localNum": 1521,
+                "addNum": 0,
+                "buildingNum": 51,
+                "villageNum": 1,
+                "hzrbzNum": 29,
+                "rzhbzNum": 1408,
+                "houseNum": 706
+            },
+            {
+                "userNum": 8573,
+                "liveNum": 8136,
+                "orgName": "清水湾",
+                "committeeNum": 0,
+                "unLocalNum": 2816,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 2377,
+                "orgId": "3B1BB89DC317523D",
+                "localNum": 3382,
+                "addNum": 0,
+                "buildingNum": 60,
+                "villageNum": 1,
+                "hzrbzNum": 178,
+                "rzhbzNum": 4362,
+                "houseNum": 2034
+            },
+            {
+                "userNum": 10190,
+                "liveNum": 9627,
+                "orgName": "世纪同乐",
+                "committeeNum": 0,
+                "unLocalNum": 2769,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 2752,
+                "orgId": "06A61DB95F4AD59D",
+                "localNum": 3507,
+                "addNum": 0,
+                "buildingNum": 50,
+                "villageNum": 1,
+                "hzrbzNum": 276,
+                "rzhbzNum": 6463,
+                "houseNum": 2569
+            },
+            {
+                "userNum": 5746,
+                "liveNum": 5735,
+                "orgName": "紫御豪庭",
+                "committeeNum": 0,
+                "unLocalNum": 1851,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1554,
+                "orgId": "BC15154C331201D9",
+                "localNum": 1874,
+                "addNum": 0,
+                "buildingNum": 200,
+                "villageNum": 3,
+                "hzrbzNum": 0,
+                "rzhbzNum": 3916,
+                "houseNum": 1533
+            },
+            {
+                "userNum": 6931,
+                "liveNum": 6923,
+                "orgName": "雅仕汇都",
+                "committeeNum": 0,
+                "unLocalNum": 1697,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 2079,
+                "orgId": "3A3E863F91A83D8D",
+                "localNum": 2219,
+                "addNum": 0,
+                "buildingNum": 47,
+                "villageNum": 4,
+                "hzrbzNum": 0,
+                "rzhbzNum": 6065,
+                "houseNum": 1733
+            },
+            {
+                "userNum": 6992,
+                "liveNum": 6827,
+                "orgName": "95弄",
+                "committeeNum": 0,
+                "unLocalNum": 2543,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1789,
+                "orgId": "7ABF7C7C496162F7",
+                "localNum": 3084,
+                "addNum": 0,
+                "buildingNum": 69,
+                "villageNum": 2,
+                "hzrbzNum": 75,
+                "rzhbzNum": 4829,
+                "houseNum": 1773
+            },
+            {
+                "userNum": 6970,
+                "liveNum": 6846,
+                "orgName": "隆德",
+                "committeeNum": 0,
+                "unLocalNum": 1963,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 690,
+                "orgId": "27D45530BCCEEA13",
+                "localNum": 3100,
+                "addNum": 0,
+                "buildingNum": 50,
+                "villageNum": 3,
+                "hzrbzNum": 53,
+                "rzhbzNum": 5378,
+                "houseNum": 2116
             }
-        ];
+        ]
+
 
         // 配置ECharts的Option
         var option = {
@@ -532,24 +1059,12 @@
                 {
                     map: 'cf',  // 设置地图
                     roam: false,     // 启用缩放和平移
-                    layoutCenter: ['50%', '60%'], // 地图居中
-                    layoutSize: '170%',
+                    layoutCenter: ['50%', '65%'], // 地图居中
+                    layoutSize: '200%',
                     selectedMode: 'single',  // 单选模式
                 }
             ],
-            radar: {
-                // shape: 'circle',
-                indicator: [
-                    {name: '能力1', max: 6},
-                    {name: '能力2', max: 6},
-                    {name: '能力3', max: 6},
-                    {name: '能力4', max: 6},
-                    {name: '能力5', max: 6},
-                    {name: '能力6', max: 6}
-                ],
-                center: ['90%', '80%'],
-                radius: 120,
-            },
+
             series: series
 
             // 制作按钮结束
@@ -578,20 +1093,38 @@
 
                 // 查找对应的居委会数据
                 const community = data.find(item => item.name === params.data.name);
-                document.getElementById("app1").style.display = "block"
-                const infoElement = document.getElementById('communityInfo');
+                const infoElement = document.getElementById('c_describe');
                 infoElement.innerHTML = `
-                <b>居委会名称：</b>${community.name}<br/>
+                <b>居委会名称：</b>${community.name}    <a href="community.html?name=${community.name}" target="_blank">点击这里查看更多</a><br/>
                 <b>居委会地址：</b>${community.address}<br/>
                 <b>居委会电话：</b>${community.phone}<br/>
-                <br/>
-                <a href="community.html?name=${community.name}" target="_blank">点击这里查看更多</a>
+                <div>
+                    雅仕汇都居委会成立于2020年1月，总占地面积0.15平方公里，东至中江路，西至丹巴路，南至同普路，北至金沙江路，共有四个小区组成：雅仕名邸、长风汇都、瑞仕璟庭、和畅公寓。现有居民户数2567户，实际居住人口约6100人。党员127人，长护险13人左右，独居老人2人，其中孤老0人；残疾人17人；精访在册3人。
+                    雅仕汇都居委会工作人员在日常“走四百”工作中，广泛听取社区居民建议后，收集民情民意，以“居民议事协商”为抓手，做到居民有需求，社区有回应。
+                    居委会成立至今，突出特色和实效，有序开展各类活动：关心关爱社区高龄老人、独居老人等特殊群体；积极参加“创文创卫”创建工作，组织“清洁家园”、“文明修身”、“文明礼仪”等文明树新风活动；开展平安夜巡和反诈宣传，维护社区和谐稳定。一场场丰富多彩的活动让社区“活”起来、队伍“动”起来、群众“乐”起来。
+                    和畅公寓新时代文明实践站位于丹巴路586弄和畅公寓3号楼201室。自成立以来，始终奉行“服务社区、弘扬新风”的宗旨，促进文明社区的创建，满足社区群众日益增长的文化生活需要，用微光温暖你我，用汗水守护家园。
+                    雅仕汇都居委会获得荣誉：上海市妇女之家示范点（2020年年底）、上海市儿童友好社区示范点（2021年）、上海市节水型小区、全国防灾减灾示范社区、上海市无违建居村、上海市垃圾分类银奖。
+                    近年来，雅仕汇都居民区党总支深化党建引领，与结对单位切实强化交流合作，全力构建“资源共享、优势互补、互相促进、共同发展”的党建共建联建崭新格局，定期与共建单位开展社区法律公益课堂、联合结对单位开展公益活动、慰问困难党员等。雅仕汇都居民区将以结对共建为抓手，充分挖掘和发挥各自的资源和优势，联手服务、联心发展，进一步做精做优基层治理服务，以更实举措回应居民群众美好生活新期盼。
+                    下一步，雅仕汇都居委会将继续夯实阵地建设，扎实开展多层次、多样化的活动，扩大“服务圈”，织好“贴心网”，让文明之花绽放长风，不断提升人民群众的获得感、幸福感、安全感。
+                </div>
               `
                 // const name = encodeURIComponent(params.data.name); // 获取居委会名称并进行URL编码
                 // window.open(`community.html?name=${name}`, '_blank'); // 使用正确的 URL 参数传递
+                const cdata = cList.find(item => item.orgName.includes(params.data.name));
+                console.log(cdata)
+                document.getElementById("c_info").style.display = "block"
+                const CinfoElement = document.getElementById('c_info');
+                CinfoElement.innerHTML =
+                    `<div><strong>人口数：</strong>${cdata.userNum}</div>
+                    <div><strong>户籍数：</strong>${cdata.localNum}</div>
+                    <div><strong>居住数：</strong>${cdata.liveNum}</div>
+                    <div><strong>楼宇数：</strong>${cdata.buildingNum}</div>
+                    <div><strong>房屋数：</strong>${cdata.houseNum}</div>`
+
+
             }
             if (params.seriesName === 'B组') {
-                document.getElementById("app").style.display = "block"
+                document.getElementById("activity_list").style.display = "block"
             }
             if (params.seriesType === 'effectScatter') {
                 // Redirect to the desired page
@@ -607,6 +1140,1077 @@
         });
 
     };
+
+
+    function show1() {
+
+        const data13 = [
+            [623.7954938271605, 709.085324074074, 10, "点击会跳转到房态图"],
+            [822.2521296296296, 610.3060030864198, 15, "事件B"]
+        ]
+        const series1 = [
+            {
+                name: "涟漪图",
+                type: 'effectScatter',
+                coordinateSystem: 'geo',
+                geoIndex: 0,
+                symbolSize: function (params) {
+                    return (params[2] / 10) * 15 + 5;
+                },
+                itemStyle: {
+                    color: '#f00'
+                },
+                encode: {
+                    tooltip: 2
+                },
+                data: data13,
+                tooltip: {
+                    trigger: 'item',
+                    formatter: function (params) {
+                        const data = params.data;
+                        return `${data[3]}`;
+                    }
+                },
+
+            },
+        ];
+
+        var option1 = {
+            tooltip: {
+                trigger: 'item',
+                formatter: function (params) {
+                    const data = params.data;
+                    return `
+                        <b>序号：</b>${data.index}<br/>
+                        <b>居委会：</b>${data.name}<br/>
+                        <b>地址：</b>${data.address}<br/>
+                        <b>电话：</b>${data.phone}
+                      `;
+                }
+            },
+            geo: [
+                {
+                    map: 'cf',  // 设置地图
+                    roam: false,     // 启用缩放和平移
+                    layoutCenter: ['50%', '65%'], // 地图居中
+                    layoutSize: '200%',
+                    selectedMode: 'single',  // 单选模式
+                }
+            ],
+
+            series: series1
+
+            // 制作按钮结束
+        }
+        myChart.setOption(option1);
+    }
+
+    function fgl() {
+        let data11 = [
+            {
+                "userNum": 5116,
+                "liveNum": 4430,
+                "orgName": "曹家巷",
+                "committeeNum": 0,
+                "unLocalNum": 1975,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 855,
+                "orgId": "042CAA67F4668C96",
+                "localNum": 2610,
+                "addNum": 0,
+                "buildingNum": 74,
+                "villageNum": 5,
+                "hzrbzNum": 864,
+                "rzhbzNum": 2586,
+                "houseNum": 1157,
+                "value": [
+                    1144.6560952369705,
+                    510.3740270395594
+                ],
+                "name": "曹家巷",
+                "index": 13,
+                "address": "中山北路3676弄4号底楼",
+                "phone": "62236347",
+                "fgs": 775
+            },
+            {
+                "userNum": 2798,
+                "liveNum": 2621,
+                "orgName": "中山桥",
+                "committeeNum": 0,
+                "unLocalNum": 1120,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 642,
+                "orgId": "FD10547CC89A7F4D",
+                "localNum": 1023,
+                "addNum": 0,
+                "buildingNum": 22,
+                "villageNum": 3,
+                "hzrbzNum": 99,
+                "rzhbzNum": 1577,
+                "houseNum": 716,
+                "value": [
+                    1159.905815810657,
+                    616.3935422502618
+                ],
+                "name": "中山桥",
+                "index": 14,
+                "address": "凯旋北路1888弄8号201室",
+                "phone": "52681289",
+                "fgs": 415
+            },
+            {
+                "userNum": 7150,
+                "liveNum": 7008,
+                "orgName": "师大一村",
+                "committeeNum": 0,
+                "unLocalNum": 2673,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 2528,
+                "orgId": "849F56D6E4965D72",
+                "localNum": 9652,
+                "addNum": 0,
+                "buildingNum": 380,
+                "villageNum": 1,
+                "hzrbzNum": 83,
+                "rzhbzNum": 3831,
+                "houseNum": 2128,
+                "value": [
+                    1137.6873579741962,
+                    589.5165305624088
+                ],
+                "name": "师大一村",
+                "index": 7,
+                "address": "中山北路3671弄1号101室",
+                "phone": "62232830",
+                "fgs": 936
+            },
+            {
+                "userNum": 2023,
+                "liveNum": 1818,
+                "orgName": "新渡口",
+                "committeeNum": 0,
+                "unLocalNum": 761,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 520,
+                "orgId": "F2A51E6342625935",
+                "localNum": 3239,
+                "addNum": 0,
+                "buildingNum": 200,
+                "villageNum": 3,
+                "hzrbzNum": 127,
+                "rzhbzNum": 1166,
+                "houseNum": 608,
+                "value": [
+                    941.2868167285947,
+                    692.8324922694218
+                ],
+                "name": "新渡口",
+                "index": 9,
+                "address": "光复西路2213弄89号1楼",
+                "phone": "62602971",
+                "fgs": 328
+            },
+            {
+                "userNum": 5825,
+                "liveNum": 5656,
+                "orgName": "长风一村",
+                "committeeNum": 0,
+                "unLocalNum": 2245,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 675,
+                "orgId": "57D77FA915605315",
+                "localNum": 2867,
+                "addNum": 0,
+                "buildingNum": 98,
+                "villageNum": 3,
+                "hzrbzNum": 3,
+                "rzhbzNum": 4151,
+                "houseNum": 1719,
+                "value": [
+                    894.0499784393191,
+                    404.103543216557
+                ],
+                "name": "长风一村",
+                "index": 1,
+                "address": "长风一村37号",
+                "phone": "62574725",
+                "fgs": 653
+            },
+            {
+                "userNum": 5540,
+                "liveNum": 5414,
+                "orgName": "长二一委",
+                "committeeNum": 0,
+                "unLocalNum": 2121,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1175,
+                "orgId": "47296E8561B496AD",
+                "localNum": 5543,
+                "addNum": 0,
+                "buildingNum": 82,
+                "villageNum": 2,
+                "hzrbzNum": 54,
+                "rzhbzNum": 3580,
+                "houseNum": 1913,
+                "value": [
+                    707.093611673449,
+                    340.2110475036418
+                ],
+                "name": "长二一委",
+                "index": 2,
+                "address": "长风二村137号101室",
+                "phone": "62223425",
+                "fgs": 1013
+            },
+            {
+                "userNum": 8209,
+                "liveNum": 7808,
+                "orgName": "长风三村",
+                "committeeNum": 0,
+                "unLocalNum": 2778,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 2015,
+                "orgId": "D85821889A11534A",
+                "localNum": 4589,
+                "addNum": 0,
+                "buildingNum": 271,
+                "villageNum": 3,
+                "hzrbzNum": 416,
+                "rzhbzNum": 4965,
+                "houseNum": 2291,
+                "value": [
+                    806.2596764465688,
+                    486.9435282152614
+                ],
+                "name": "长风三村",
+                "index": 4,
+                "address": "枣阳路465弄12号101室",
+                "phone": "62862292",
+                "fgs": 733
+            },
+            {
+                "userNum": 5771,
+                "liveNum": 5226,
+                "orgName": "长四一委",
+                "committeeNum": 0,
+                "unLocalNum": 1814,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1420,
+                "orgId": "C9B35BB8C577AAAB",
+                "localNum": 3843,
+                "addNum": 0,
+                "buildingNum": 89,
+                "villageNum": 3,
+                "hzrbzNum": 357,
+                "rzhbzNum": 3565,
+                "houseNum": 1914,
+                "value": [
+                    733.5544227042859,
+                    456.47656474230473
+                ],
+                "name": "长四一委",
+                "index": 5,
+                "address": "怒江路131弄2号104室",
+                "phone": "62869557",
+                "fgs": 899
+            },
+            {
+                "userNum": 3326,
+                "liveNum": 3162,
+                "orgName": "长四二委",
+                "committeeNum": 0,
+                "unLocalNum": 1177,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 894,
+                "orgId": "530401C874EEF563",
+                "localNum": 1671,
+                "addNum": 0,
+                "buildingNum": 44,
+                "villageNum": 4,
+                "hzrbzNum": 46,
+                "rzhbzNum": 2052,
+                "houseNum": 948,
+                "value": [
+                    730.4384832581881,
+                    526.7583100265115
+                ],
+                "name": "长四二委",
+                "index": 6,
+                "address": "怒江路30弄3号105室",
+                "phone": "62454636",
+                "fgs": 350
+            },
+            {
+                "userNum": 7537,
+                "liveNum": 7452,
+                "orgName": "长二二委",
+                "committeeNum": 0,
+                "unLocalNum": 2389,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 2608,
+                "orgId": "D8508FEC8314257E",
+                "localNum": 4530,
+                "addNum": 0,
+                "buildingNum": 74,
+                "villageNum": 4,
+                "hzrbzNum": 36,
+                "rzhbzNum": 4363,
+                "houseNum": 2236,
+                "value": [
+                    769.9070495754273,
+                    336.6860038145435
+                ],
+                "name": "长二二委",
+                "index": 3,
+                "address": "长风二村46号",
+                "phone": "62436551",
+                "fgs": 983
+            },
+            {
+                "userNum": 9098,
+                "liveNum": 8898,
+                "orgName": "锦绿",
+                "committeeNum": 0,
+                "unLocalNum": 2113,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 2879,
+                "orgId": "6D0C9D4EB98FA69E",
+                "localNum": 5243,
+                "addNum": 0,
+                "buildingNum": 77,
+                "villageNum": 3,
+                "hzrbzNum": 114,
+                "rzhbzNum": 5535,
+                "houseNum": 2583,
+                "value": [
+                    1399.8139052518704,
+                    366.4953486037123
+                ],
+                "name": "锦绿",
+                "index": 23,
+                "address": "宁夏路353弄12号101室",
+                "phone": "62604728",
+                "fgs": 1084
+            },
+            {
+                "userNum": 2827,
+                "liveNum": 2768,
+                "orgName": "曹家村",
+                "committeeNum": 0,
+                "unLocalNum": 897,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 546,
+                "orgId": "11A6A40629A6C88C",
+                "localNum": 2732,
+                "addNum": 0,
+                "buildingNum": 83,
+                "villageNum": 3,
+                "hzrbzNum": 16,
+                "rzhbzNum": 1900,
+                "houseNum": 835,
+                "value": [
+                    1428.9129124271094,
+                    511.34752116576476
+                ],
+                "name": "曹家村",
+                "index": 21,
+                "address": "白玉路678弄7号203室",
+                "phone": "52365195",
+                "fgs": 526
+            },
+            {
+                "userNum": 4272,
+                "liveNum": 4185,
+                "orgName": "白玉一委",
+                "committeeNum": 0,
+                "unLocalNum": 1391,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 751,
+                "orgId": "92494917B5B211DB",
+                "localNum": 2270,
+                "addNum": 0,
+                "buildingNum": 40,
+                "villageNum": 3,
+                "hzrbzNum": 41,
+                "rzhbzNum": 2856,
+                "houseNum": 1351,
+                "value": [
+                    1252.8631322186761,
+                    348.79071013563
+                ],
+                "name": "白玉一委",
+                "index": 19,
+                "address": "白玉新村85号101室",
+                "phone": "62035413",
+                "fgs": 661
+            },
+            {
+                "userNum": 6390,
+                "liveNum": 5924,
+                "orgName": "白玉二委",
+                "committeeNum": 0,
+                "unLocalNum": 2235,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1714,
+                "orgId": "98DEE502DAED12C5",
+                "localNum": 3732,
+                "addNum": 0,
+                "buildingNum": 92,
+                "villageNum": 5,
+                "hzrbzNum": 115,
+                "rzhbzNum": 3959,
+                "houseNum": 1872,
+                "value": [
+                    1319.1419847396864,
+                    348.93202965060016
+                ],
+                "name": "白玉二委",
+                "index": 20,
+                "address": "白玉新村18号107室",
+                "phone": "62224511",
+                "fgs": 973
+            },
+            {
+                "userNum": 5657,
+                "liveNum": 5453,
+                "orgName": "普四一委",
+                "committeeNum": 0,
+                "unLocalNum": 1886,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1511,
+                "orgId": "5B7D64DB5FE16879",
+                "localNum": 2535,
+                "addNum": 0,
+                "buildingNum": 20,
+                "villageNum": 3,
+                "hzrbzNum": 105,
+                "rzhbzNum": 3401,
+                "houseNum": 1591,
+                "value": [
+                    1353.0637988495394,
+                    243.24411681535972
+                ],
+                "name": "普四一委",
+                "index": 17,
+                "address": "白玉路100号",
+                "phone": "62440226",
+                "fgs": 827
+            },
+            {
+                "userNum": 4032,
+                "liveNum": 3522,
+                "orgName": "普四二委",
+                "committeeNum": 0,
+                "unLocalNum": 1525,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 774,
+                "orgId": "0BD9C161AE2536BB",
+                "localNum": 4524,
+                "addNum": 0,
+                "buildingNum": 41,
+                "villageNum": 5,
+                "hzrbzNum": 333,
+                "rzhbzNum": 2252,
+                "houseNum": 1143,
+                "value": [
+                    1304.9341080195418,
+                    265.92944879892536
+                ],
+                "name": "普四二委",
+                "index": 18,
+                "address": "白兰路88号",
+                "phone": "62446154",
+                "fgs": 342
+            },
+            {
+                "userNum": 6735,
+                "liveNum": 6373,
+                "orgName": "普陀二村",
+                "committeeNum": 0,
+                "unLocalNum": 2088,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1849,
+                "orgId": "3C3128D715901965",
+                "localNum": 2913,
+                "addNum": 0,
+                "buildingNum": 62,
+                "villageNum": 4,
+                "hzrbzNum": 282,
+                "rzhbzNum": 5536,
+                "houseNum": 1590,
+                "value": [
+                    1385.277762454008,
+                    322.02978188530903
+                ],
+                "name": "普陀二村",
+                "index": 16,
+                "address": "宁夏路312弄1号2室",
+                "phone": "62441804",
+                "fgs": 1017
+            },
+            {
+                "userNum": 6983,
+                "liveNum": 6495,
+                "orgName": "金沙",
+                "committeeNum": 0,
+                "unLocalNum": 2195,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1846,
+                "orgId": "D53FB6FCBA9EE02D",
+                "localNum": 5283,
+                "addNum": 0,
+                "buildingNum": 140,
+                "villageNum": 7,
+                "hzrbzNum": 230,
+                "rzhbzNum": 4142,
+                "houseNum": 2358,
+                "value": [
+                    1318.9541357522362,
+                    397.798554356354
+                ],
+                "name": "金沙",
+                "index": 22,
+                "address": "顺义路南林家港12号底楼",
+                "phone": "62869103",
+                "fgs": 1579
+            },
+            {
+                "userNum": 5783,
+                "liveNum": 5444,
+                "orgName": "海鑫",
+                "committeeNum": 0,
+                "unLocalNum": 1415,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1559,
+                "orgId": "5CD4AAB10D26EBAB",
+                "localNum": 2284,
+                "addNum": 0,
+                "buildingNum": 79,
+                "villageNum": 2,
+                "hzrbzNum": 210,
+                "rzhbzNum": 3375,
+                "houseNum": 1757,
+                "value": [
+                    1041.3919032460049,
+                    686.1027385539664
+                ],
+                "name": "海鑫",
+                "index": 11,
+                "address": "光复西路2077弄32号二楼",
+                "phone": "62600095",
+                "fgs": 948
+            },
+            {
+                "userNum": 4506,
+                "liveNum": 4245,
+                "orgName": "师大三村",
+                "committeeNum": 0,
+                "unLocalNum": 1439,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1534,
+                "orgId": "A08F924A3EFDFF90",
+                "localNum": 2375,
+                "addNum": 0,
+                "buildingNum": 64,
+                "villageNum": 3,
+                "hzrbzNum": 206,
+                "rzhbzNum": 2283,
+                "houseNum": 1131,
+                "value": [
+                    649.3540229244668,
+                    414.5231697486255
+                ],
+                "name": "师大三村",
+                "index": 8,
+                "address": "金沙江路895弄60号301室",
+                "phone": "62652253",
+                "fgs": 723
+            },
+            {
+                "userNum": 2404,
+                "liveNum": 2344,
+                "orgName": "中江",
+                "committeeNum": 0,
+                "unLocalNum": 900,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 736,
+                "orgId": "715FE0491A79FA9E",
+                "localNum": 1521,
+                "addNum": 0,
+                "buildingNum": 51,
+                "villageNum": 1,
+                "hzrbzNum": 29,
+                "rzhbzNum": 1408,
+                "houseNum": 706,
+                "value": [
+                    394.49432734779276,
+                    483.3689078758541
+                ],
+                "name": "中江",
+                "index": 12,
+                "address": "中江路624-626号",
+                "phone": "52819258",
+                "fgs": 310
+            },
+            {
+                "userNum": 8573,
+                "liveNum": 8136,
+                "orgName": "清水湾",
+                "committeeNum": 0,
+                "unLocalNum": 2816,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 2377,
+                "orgId": "3B1BB89DC317523D",
+                "localNum": 3382,
+                "addNum": 0,
+                "buildingNum": 60,
+                "villageNum": 1,
+                "hzrbzNum": 178,
+                "rzhbzNum": 4362,
+                "houseNum": 2034,
+                "value": [
+                    1236.1721355561554,
+                    640.5208417449916
+                ],
+                "name": "清水湾",
+                "index": 24,
+                "address": "凯旋北路1555弄70号2楼",
+                "phone": "52682500",
+                "fgs": 833
+            },
+            {
+                "userNum": 10190,
+                "liveNum": 9627,
+                "orgName": "世纪同乐",
+                "committeeNum": 0,
+                "unLocalNum": 2769,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 2752,
+                "orgId": "06A61DB95F4AD59D",
+                "localNum": 3507,
+                "addNum": 0,
+                "buildingNum": 50,
+                "villageNum": 1,
+                "hzrbzNum": 276,
+                "rzhbzNum": 6463,
+                "houseNum": 2569,
+                "value": [
+                    1443.6186309742889,
+                    395.79622298447606
+                ],
+                "name": "世纪同乐",
+                "index": 25,
+                "address": "顺义路130号三楼",
+                "phone": "52360276",
+                "fgs": 1233
+            },
+            {
+                "userNum": 5746,
+                "liveNum": 5735,
+                "orgName": "紫御豪庭",
+                "committeeNum": 0,
+                "unLocalNum": 1851,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1554,
+                "orgId": "BC15154C331201D9",
+                "localNum": 1874,
+                "addNum": 0,
+                "buildingNum": 200,
+                "villageNum": 3,
+                "hzrbzNum": 0,
+                "rzhbzNum": 3916,
+                "houseNum": 1533,
+                "value": [
+                    95.63242289642241,
+                    503.6155077860561
+                ],
+                "name": "紫御豪庭",
+                "index": 26,
+                "address": "同普路689弄5号三楼",
+                "phone": "52788996",
+                "fgs": 1027
+            },
+            {
+                "userNum": 6931,
+                "liveNum": 6923,
+                "orgName": "雅仕汇都",
+                "committeeNum": 0,
+                "unLocalNum": 1697,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 2079,
+                "orgId": "3A3E863F91A83D8D",
+                "localNum": 2219,
+                "addNum": 0,
+                "buildingNum": 47,
+                "villageNum": 4,
+                "hzrbzNum": 0,
+                "rzhbzNum": 6065,
+                "houseNum": 1733,
+                "value": [
+                    243.66204039899952,
+                    437.3861670713435
+                ],
+                "name": "雅仕汇都",
+                "index": 27,
+                "address": "泸定路555弄19号二楼",
+                "phone": "52855850",
+                "fgs": 1126
+            },
+            {
+                "userNum": 6992,
+                "liveNum": 6827,
+                "orgName": "95弄",
+                "committeeNum": 0,
+                "unLocalNum": 2543,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 1789,
+                "orgId": "7ABF7C7C496162F7",
+                "localNum": 3084,
+                "addNum": 0,
+                "buildingNum": 69,
+                "villageNum": 2,
+                "hzrbzNum": 75,
+                "rzhbzNum": 4829,
+                "houseNum": 1773,
+                "value": [
+                    819.3100306359535,
+                    715.966020666302
+                ],
+                "name": "95弄",
+                "index": 10,
+                "address": "大渡河路21弄16号1楼",
+                "phone": "62864687",
+                "fgs": 939
+            },
+            {
+                "userNum": 6970,
+                "liveNum": 6846,
+                "orgName": "隆德",
+                "committeeNum": 0,
+                "unLocalNum": 1963,
+                "editNum": 0,
+                "cancelNum": 0,
+                "rzhzNum": 690,
+                "orgId": "27D45530BCCEEA13",
+                "localNum": 3100,
+                "addNum": 0,
+                "buildingNum": 50,
+                "villageNum": 3,
+                "hzrbzNum": 53,
+                "rzhbzNum": 5378,
+                "houseNum": 2116,
+                "value": [
+                    1538.3400570706726,
+                    482.83569958478137
+                ],
+                "name": "隆德",
+                "index": 15,
+                "address": "光复西路1145弄19号",
+                "phone": "52359419",
+                "fgs": 952
+            }
+        ]
+
+        function PieSeries(center, data1, data2, name) {
+            return {
+                type: 'pie',
+                name: name,
+                coordinateSystem: 'geo',
+                tooltip: {
+                    show: false,
+                    formatter: '{b}: {c} ({d}%)'
+                },
+                label: {
+                    show: false,
+                    position: 'center',
+                    formatter: '{b} \n {d}%',
+                    color: "#000",
+                    backgroundColor: "#fff"
+                },
+                labelLine: {
+                    show: false
+                },
+                animationDuration: 0,
+                radius: ['6%', '9%'],
+                avoidLabelOverlap: false,
+                itemStyle: {
+                    borderRadius: 10
+                },
+                center,
+                data: [
+                    {
+                        value: data1, name: name, itemStyle: {
+                            color: "#0f0"
+                        }
+                    }, {
+                        value: data2 - data1, name: name, itemStyle: {
+                            color: "#f00"
+                        }
+                    }
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    },
+                    label: {
+                        show: true,
+                        fontSize: 20,
+                        fontWeight: 'bold'
+                    },
+
+                }
+            };
+        }
+
+        const series3 = data11.map(item =>
+            PieSeries(item['value'], item['fgs'], item['houseNum'], item['name'])
+        );
+
+
+        let option3 = {
+            tooltip: {
+                trigger: 'item',
+            },
+            geo: [
+                {
+                    //         // map: 'cf',  // 设置地图
+                    roam: true,     // 启用缩放和平移
+                    //         // layoutCenter: ['50%', '65%'], // 地图居中
+                    //         // layoutSize: '200%',
+                    //         // selectedMode: 'single',  // 单选模式
+                }
+            ],
+
+            series: series3
+
+            // 制作按钮结束
+        };
+
+        // 设置图表选项
+        myChart.setOption(option3);
+    }
+
+
+</script>
+<script data-name="cf_Statistic">
+    const {createApp} = Vue
+
+    createApp({
+        data() {
+            return {
+                data: {
+                    "orgId": "65FDE827845184A8",
+                    "orgName": "长风新村街道",
+                    "committeeNum": 27, // 居民区总数
+                    "villageNum": 111, // 小区总数
+                    "buildingNum": 2559,// 楼宇总数
+                    "houseNum": 44305, // 房屋总数
+                    "userNum": 150290, // 人口总数
+                    "localNum": 92145, // 户籍数
+                    "unLocalNum": 48599, // 外籍来沪
+                    "gatNum": 441, // 港澳台
+                    "foreignNum": 554, // 外籍人士
+                    "addNum": 666, // 流入人数
+                    "cancelNum": 0,
+                    "liveNum": 143275, //居住数量
+                    "rzhzNum": 40889, // 人在户不在
+                    "hzrbzNum": 3731, // 户在人不在
+                    "rzhbzNum": 93845, // 人在户在
+                }
+            }
+        }
+    })
+        .use(ElementPlus)
+        .mount('#base_info')
+</script>
+<script data-name="abcd">
+    const App1 = {
+        data() {
+            return {
+                data: 123
+            }
+        }
+    }
+    const App1_1 = Vue.createApp(App1)
+    App1_1.use(ElementPlus).mount('#bb')
+</script>
+
+<script data-name="r1">
+    // 工具：生成正态分布随机数（Box-Muller）
+    function randomNormal(mean, stdDev) {
+        let u = 0, v = 0;
+        while (u === 0) u = Math.random();
+        while (v === 0) v = Math.random();
+        const num = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+        return Math.round(num * stdDev + mean);
+    }
+
+    // 初始化
+    const minAge = 24, maxAge = 65;
+    const maleCount = 50, femaleCount = 150;
+
+    // 年龄桶
+    const ageRange = Array.from({length: maxAge - minAge + 1}, (_, i) => minAge + i);
+    const maleAges = Array(ageRange.length).fill(0);
+    const femaleAges = Array(ageRange.length).fill(0);
+
+    // 随机生成年龄数据
+    const meanAge = 42, stdDev = 10;
+
+    for (let i = 0; i < maleCount; i++) {
+        let age;
+        do {
+            age = randomNormal(meanAge, stdDev);
+        } while (age < minAge || age > maxAge);
+        maleAges[age - minAge]++;
+    }
+
+    for (let i = 0; i < femaleCount; i++) {
+        let age;
+        do {
+            age = randomNormal(meanAge, stdDev);
+        } while (age < minAge || age > maxAge);
+        femaleAges[age - minAge]++;
+    }
+
+    const option = {
+        // title: {
+        //     text: 'Age Distribution by Gender'
+        // },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {type: 'shadow'}
+        },
+        legend: {
+            data: ['Male', 'Female']
+        },
+        xAxis: {
+            type: 'category',
+            data: ageRange.map(String),
+            name: 'Age'
+        },
+        yAxis: {
+            type: 'value',
+            name: 'Count'
+        },
+        series: [
+            {
+                name: 'Male',
+                type: 'bar',
+                stack: 'gender',
+                data: maleAges,
+                color: '#4A90E2'
+            },
+            {
+                name: 'Female',
+                type: 'bar',
+                stack: 'gender',
+                data: femaleAges,
+                color: '#E94E77'
+            }
+        ]
+    };
+
+    const chart = echarts.init(document.getElementById('r1'));
+    chart.setOption(option);
+</script>
+<script data-name="r2">
+    // 生成日期数组和随机值
+    function getDateList(startDate, endDate) {
+        const dateList = [];
+        const current = new Date(startDate);
+        const end = new Date(endDate);
+        while (current <= end) {
+            const y = current.getFullYear();
+            const m = String(current.getMonth() + 1).padStart(2, '0');
+            const d = String(current.getDate()).padStart(2, '0');
+            const dateStr = `${y}-${m}-${d}`;
+            const value = Math.floor(Math.random() * 100); // 0~99 随机值
+            dateList.push([dateStr, value]);
+            current.setDate(current.getDate() + 1);
+        }
+        return dateList;
+    }
+
+    const data = getDateList("2025-02-01", "2025-04-30");
+
+    const option333 = {
+        tooltip: {
+            formatter: function (p) {
+                return `${p.data[0]}<br/>Value: ${p.data[1]}`;
+            }
+        },
+        visualMap: {
+            min: 0,
+            max: 100,
+            type: 'piecewise',
+            orient: 'horizontal',
+            left: 'center',
+            top: 40,
+            show: false
+        },
+        calendar: {
+            left: 50,
+            range: ['2025-02-01', '2025-04-30'],
+            cellSize: ["auto", 'auto'],
+            orient: "vertical",
+            splitLine: {
+                show: true,
+                lineStyle: {
+                    color: '#999',
+                    width: 1
+                }
+            },
+            dayLabel: {
+                firstDay: 7,
+                nameMap: 'cn'
+            },
+            monthLabel: {
+                nameMap: 'cn'
+            },
+            itemStyle: {
+                borderWidth: 0.5,
+                borderColor: '#ccc'
+            }
+        },
+        series: {
+            type: 'heatmap',
+            coordinateSystem: 'calendar',
+            data: data
+        }
+    };
+
+    const chart333 = echarts.init(document.getElementById('r2'));
+    chart333.setOption(option333);
 </script>
 
 
