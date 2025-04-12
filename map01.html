@@ -107,7 +107,7 @@
                     <el-dropdown-item>微型消防站</el-dropdown-item>
                     <el-dropdown-item>应急避难场所 / 疏散点</el-dropdown-item>
                     <el-dropdown-item>活动室</el-dropdown-item>
-                    <el-dropdown-item>健身步道</el-dropdown-item>
+                    <el-dropdown-item onclick="show_walk()">健身步道</el-dropdown-item>
                     <el-dropdown-item>城市家具</el-dropdown-item>
                     <el-dropdown-item>风邻集市</el-dropdown-item>
                     <el-dropdown-item>……</el-dropdown-item>
@@ -3682,6 +3682,118 @@
     }
 
 
+</script>
+<script data-name="walk">
+    let walk = {
+        name: 'Route',
+        type: 'lines',
+        coordinateSystem: 'geo',
+        geoIndex: 0,
+        emphasis: {
+            label: {
+                show: false
+            }
+        },
+        polyline: true,
+        lineStyle: {
+            color: '#333',
+            width: 10,
+            opacity: 0.9,
+            type: 'dotted'
+        },
+        effect: {
+            show: true,
+            period: 8,
+            color: '#ff00c8',
+            constantSpeed: 40,
+            trailLength: 0,
+            symbolSize: [40, 24],
+            symbol:
+                'path://M35.5 40.5c0-22.16 17.84-40 40-40s40 17.84 40 40c0 1.6939-.1042 3.3626-.3067 5H35.8067c-.2025-1.6374-.3067-3.3061-.3067-5zm90.9621-2.6663c-.62-1.4856-.9621-3.1182-.9621-4.8337 0-6.925 5.575-12.5 12.5-12.5s12.5 5.575 12.5 12.5a12.685 12.685 0 0 1-.1529 1.9691l.9537.5506-15.6454 27.0986-.1554-.0897V65.5h-28.7285c-7.318 9.1548-18.587 15-31.2715 15s-23.9535-5.8452-31.2715-15H15.5v-2.8059l-.0937.0437-8.8727-19.0274C2.912 41.5258.5 37.5549.5 33c0-6.925 5.575-12.5 12.5-12.5S25.5 26.075 25.5 33c0 .9035-.0949 1.784-.2753 2.6321L29.8262 45.5h92.2098z'
+        },
+        data: [
+            {
+                coords: [
+                    [1149.583125, 438.49937500000004],
+                    [1144.6167183573307, 510.1837452845675],
+                    [1161.8612558019909, 622.8891150121692],
+                    [1136.8566765072346, 592.4032363153586],
+                    [1044.0441124747251, 693.3453680003531],
+                    [944.4569087318114, 694.7002959424335],
+                    [784.5754115663175, 724.5087106682037],
+                    [682.9379938995789, 740.4063939117889],
+                    [659.1657831557775, 586.2968897795578],
+                    [731.011875, 528.76],
+                    [734.979375, 461.31250000000006],
+                    [386.80399041050754, 484.7589192024937],
+                    [92.76264666050827, 503.96161920249364],
+                    [239.1832341605079, 433.15166295249384],
+                    [662.8428029105069, 417.54946920249387],
+                    [706.1023467915194, 338.45110481138556],
+                    [770.8579904105065, 329.93715045249405],
+                    [808.0632216605064, 491.95993170249363],
+                    [890.8748654105062, 401.9472754524939],
+                    [1253.7952544552932, 346.4208801937983],
+                    [1318.9445556204662, 344.7293940639031],
+                    [1305.9884794035916, 266.5302197549089],
+                    [1353.6483312013809, 239.69263330566827],
+                    [1381.8740686738581, 322.5189776921178],
+                    [1402.2336170146614, 368.327961458925],
+                    [1445.729015742741, 395.62826491591113],
+                    [1538.7351342995921, 480.7681943410883],
+                    [1430.0203822653632, 510.88141279050325],
+                    [1320.9961054058595, 393.65982188141277],
+                    [1229.186188050488, 641.2187061789325],
+                    [1156.2300930091658, 451.8607516334787]
+                ]
+            }
+        ]
+    }
+
+    function show_walk() {
+        series = [];
+        series.push(walk)
+        // 配置ECharts的Option
+        option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: function (params) {
+                    return params;
+                }
+            },
+            geo: [
+                {
+                    map: 'cf',  // 设置地图
+                    roam: true,     // 启用缩放和平移
+                    layoutCenter: ['50%', '65%'], // 地图居中
+                    layoutSize: '200%',
+                    selectedMode: 'single',  // 单选模式
+                }
+            ],
+            series: series
+
+            // 制作按钮结束
+        };
+
+        // 设置图表选项
+        myChart.setOption(option);
+        myChart.getZr().on('click', function (params) {
+            var pixelPoint = [params.offsetX, params.offsetY];
+            var dataPoint = myChart.convertFromPixel({geoIndex: 0}, pixelPoint);
+            // console.log(dataPoint);
+            navigator.clipboard.writeText(dataPoint).then(function () {
+                console.log('Data copied to clipboard:', dataPoint);
+            }).catch(function (err) {
+                console.error('Failed to copy data to clipboard:', err);
+            });
+
+        });
+        myChart.on('click', function (params) {
+            walk.effect.constantSpeed = randomInt(10, 500)
+            myChart.setOption(option);
+
+        });
+    }
 </script>
 </body>
 </html>
