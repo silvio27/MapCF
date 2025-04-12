@@ -41,6 +41,11 @@
 
     }
 
+    #c_info {
+        position: absolute;
+        top: 50px;
+    }
+
     #activity_list, #community_info {
         position: absolute;
         right: 0;
@@ -50,12 +55,6 @@
         display: none;
         background: #f4f4f4;
     }
-
-    　　.el-col {
-        text-align: center;
-        margin-left: 10px;
-    }
-
 
     .close-btn {
         position: absolute;
@@ -74,40 +73,91 @@
         cursor: pointer;
         z-index: 999;
     }
+
+    .el-carousel__item h3 {
+        color: #475669;
+        opacity: 0.75;
+        line-height: 100px;
+        margin: 0;
+        text-align: center;
+        font-size: xx-large;
+    }
+
+    .el-carousel__item:nth-child(2n) {
+        background-color: #99a9bf;
+    }
+
+    .el-carousel__item:nth-child(2n + 1) {
+        background-color: #d3dce6;
+    }
 </style>
 <body>
 <div id="main">
-    <div id="bb" style="display: flex;position: absolute;z-index: 999">
-        <el-button type="warning" onclick="show1()">显示位置</el-button>
-        <el-button type="success" onclick="fgl()">显示覆盖率</el-button>
+    <div id="bb" style="display: flex;position: absolute;z-index: 999;width:1600px;">
+        <el-button type="warning" onclick="show_spot()">多格合一</el-button>
+        <el-button type="success" onclick="cover_rate()">显示覆盖率</el-button>
+        <el-button type="primary" onclick="goto_community()">查看居民区楼内信息</el-button>
+
+        <el-dropdown size="large" split-button type="danger" style="position: absolute;right:100px"
+                     onclick="show_aed()">
+            社区资源地图
+            <template #dropdown>
+                <el-dropdown-menu>
+                    <el-dropdown-item>AED 自动体外除颤器</el-dropdown-item>
+                    <el-dropdown-item>微型消防站</el-dropdown-item>
+                    <el-dropdown-item>应急避难场所 / 疏散点</el-dropdown-item>
+                    <el-dropdown-item>活动室</el-dropdown-item>
+                    <el-dropdown-item>健身步道</el-dropdown-item>
+                    <el-dropdown-item>城市家具</el-dropdown-item>
+                    <el-dropdown-item>风邻集市</el-dropdown-item>
+                    <el-dropdown-item>……</el-dropdown-item>
+                </el-dropdown-menu>
+            </template>
+        </el-dropdown>
+
     </div>
     <div id="map"></div>
+    <div id="c_info" style="margin: 20px;font-size: x-large">
+        <div><strong>人口数：</strong>{{data.userNum}}</div>
+        <div><strong>户籍数：</strong>{{data.localNum}}</div>
+        <div><strong>居住数：</strong>{{data.liveNum}}</div>
+        <div><strong>楼宇数：</strong>{{data.buildingNum}}</div>
+        <div><strong>房屋数：</strong>{{data.houseNum}}</div>
+        <div><strong>小区数：</strong>{{data.villageNum}}</div>
+    </div>
     <div id="base_info">
         <el-row>
-            <el-col :span="3.5">
-                <div id="c_info" style="margin: 20px;font-size: x-large">
-                    <div><strong>人口数：</strong>{{data.userNum}}</div>
-                    <div><strong>户籍数：</strong>{{data.localNum}}</div>
-                    <div><strong>居住数：</strong>{{data.liveNum}}</div>
-                    <div><strong>楼宇数：</strong>{{data.buildingNum}}</div>
-                    <div><strong>房屋数：</strong>{{data.houseNum}}</div>
-                </div>
-            </el-col>
-            <el-col :span="16" style="overflow: hidden">
+            <el-col :span="12">
                 <div id="c_describe"
-                     style="margin: 20px;font-size: large;height: 200px;text-overflow: ellipsis ">
+                     style="margin: 30px;font-size: large;height: 200px;overflow: hidden ">
                     长风新村街道系由原长风街道和白玉路街道于2000年5月撤二建一合并而成。长风新村街道位于区西南部。东至曹杨路与长寿路街道相邻，西至真北路与长征镇相接，南至苏州河与长宁区相连，北至金沙江路、中山北路与曹杨新村街道接壤。辖区面积5.8平方公里。所辖居民委员会27个，户籍人口8.95万人，常住人口10.71万人。区域内有轨道交通3、4、11、13、15号线，拥有6座横跨苏州河的桥梁，主干道金沙江路连接内、中、外环，周边交通十分便利。街道设置党政办公室（应急管理办公室、财务管理办公室）、社区党建办公室、社区党群办公室、社区管理办公室、社区服务办公室、社区平安办公室（信访办公室）、社会工作办公室、营商环境办公室，以及纪工委、监察室、人大工委、武装部、工会、团工委、妇联、司法所等机构。长风新村街道办事处是普陀区人民政府的派出机关，受区人民政府领导，依据法律、法规的规定，在本辖区范围内行使相应的政府管理职能。街道办事处的工作以社区管理和社区服务为重点，开展社会主义物质文明、精神文明建设，创建安定团结、环境整洁、方便生活的文明社区。
                 </div>
             </el-col>
+            <el-col :span="10">
+                <div id="r2" style="width: 100%;height: 100%"></div>
+            </el-col>
         </el-row>
+
+
     </div>
     <div id="right-part">
-        <div id="r1" style="width: 100%;height: 300px;"></div>
-        <div id="r2" style="width: 100%;height: 500px;"></div>
+        <div style="height: 100px;">
+            <el-button type="primary">属地情况</el-button>
+            <el-button type="warning">政治面貌</el-button>
+            <el-button type="info">学历</el-button>
 
+        </div>
+        <div id="r1" style="width: 100%;height: 300px;"></div>
+        <div id="radar" style="width: 100%;height: 400px;"></div>
+        <div id="friend" style="margin: 10px">
+            <el-carousel :interval="1500" indicator-position="inside" height="260px" style="border-radius: 10px">
+                <el-carousel-item v-for="item in 3" :key="item">
+                    <h3 text="2xl" justify="center">共建单位{{ item }}</h3>
+                </el-carousel-item>
+            </el-carousel>
+        </div>
     </div>
 
-</div>
 </div>
 <div id="activity_list">
     <button class="close-btn" @click="hideApp">X</button>
@@ -217,6 +267,9 @@
 
     // 获取 SVG 内容并注册地图
     var svgObject = document.getElementById('svgObject');
+
+    var series
+    var option
 
     // 等待 SVG 加载完成
     svgObject.onload = function () {
@@ -425,10 +478,6 @@
             {value: [666.3843221299296, 770], name: '党群服务中心\n【可点击】', index: 88, address: '', phone: ''},
         ];
 
-        const data3 = [
-            [623.7954938271605, 709.085324074074, 20, "点击会跳转到房态图"],
-            [822.2521296296296, 610.3060030864198, 40, "事件B"]
-        ]
 
         const data4 = [
             {value: 1048, name: '服务A'},
@@ -450,7 +499,7 @@
         ]
 
 
-        const series = [
+        series = [
             {
                 name: 'A组 - 居委会',
                 type: 'scatter',
@@ -507,30 +556,6 @@
                     fontSize: 20,        // 名称字体大小
                     fontWeight: 800
                 }
-            },
-            {
-                name: "涟漪图",
-                type: 'effectScatter',
-                coordinateSystem: 'geo',
-                geoIndex: 0,
-                symbolSize: function (params) {
-                    return (params[2] / 10) * 15 + 5;
-                },
-                itemStyle: {
-                    color: '#0b6fde'
-                },
-                encode: {
-                    tooltip: 2
-                },
-                data: data3,
-                tooltip: {
-                    trigger: 'item',
-                    formatter: function (params) {
-                        const data = params.data;
-                        return `${data[3]}`;
-                    }
-                },
-
             },
             // {
             //     name: "pie",
@@ -1042,7 +1067,7 @@
 
 
         // 配置ECharts的Option
-        var option = {
+        option = {
             tooltip: {
                 trigger: 'item',
                 formatter: function (params) {
@@ -1119,7 +1144,138 @@
                     <div><strong>户籍数：</strong>${cdata.localNum}</div>
                     <div><strong>居住数：</strong>${cdata.liveNum}</div>
                     <div><strong>楼宇数：</strong>${cdata.buildingNum}</div>
-                    <div><strong>房屋数：</strong>${cdata.houseNum}</div>`
+                    <div><strong>房屋数：</strong>${cdata.houseNum}</div>
+                    <div><strong>小区数：</strong>${cdata.villageNum}</div>`
+
+                let male = randomInt(2, 4)
+                let female = randomInt(4, 6)
+                const option1 = generateAgeDistributionChartOption({
+                    male: male,
+                    female: female,
+                    step: 10 // 👈 每10岁为一个组
+                });
+                var myChart1 = echarts.init(document.getElementById('r1'));
+                myChart1.setOption(option1);
+
+
+                // 获取随机的社工能力数据
+                const peopleData = generateRandomPeopleData(male + female);
+                const option_radar = {
+                    title: {
+                        subtext: '社工能力评估雷达图',
+                        text: params.data.name,
+                        left: 'center'
+                    },
+                    legend: {
+                        bottom: "0"
+                    },
+                    tooltip: {},
+                    radar: {
+                        indicator: [
+                            {name: '沟通能力', max: 100},
+                            {name: '危机应对', max: 100},
+                            {name: '组织协调', max: 100},
+                            {name: '政策理解', max: 100},
+                            {name: '情绪管理', max: 100},
+                            {name: '资源链接', max: 100}
+                        ],
+                        shape: 'circle',
+                        radius: 100,
+                        splitNumber: 5,
+                        axisName: {
+                            color: '#333',
+                            fontSize: 14
+                        }
+                    },
+                    series: [
+                        {
+                            name: '能力评分',
+                            type: 'radar',
+                            data: peopleData,
+                            areaStyle: {
+                                opacity: 0.1
+                            }
+                        }
+                    ]
+                };
+                // 渲染图表
+                const chart_radar = echarts.init(document.getElementById('radar'));
+                chart_radar.setOption(option_radar);
+
+
+                // calendar
+                const pieSeries = scatterData.map(function (item, index) {
+                    let i = {
+                        type: 'pie',
+                        id: 'pie-' + index,
+                        center: item[0],
+                        radius: pieRadius,
+                        coordinateSystem: 'calendar',
+                        label: {
+                            formatter: '{c}',
+                            position: 'inside'
+                        },
+                        data: [
+                            {name: '蓝色', value: Math.round(Math.random() * 5)},
+                            {name: '绿色', value: Math.round(Math.random() * 20)},
+                            {name: '黄色', value: Math.round(Math.random() * 20)},
+                            {name: '红色', value: Math.round(Math.random() * 40)}
+                        ]
+                    };
+                    return i
+                });
+                optionC = {
+                    title: {
+                        text: "微格分色服务情况，日历视图",
+                        left: "center"
+                    },
+                    tooltip: {},
+                    legend: {
+                        data: ['蓝色', '绿色', '黄色', '红色'],
+                        top: 30
+                    },
+                    calendar: {
+                        top: '80',
+                        left: 'center',
+                        orient: 'vertical',
+                        cellSize: cellSize,
+                        yearLabel: {
+                            show: false,
+                            fontSize: 20
+                        },
+                        dayLabel: {
+                            margin: 10,
+                            firstDay: 7,
+                            nameMap: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                        },
+                        monthLabel: {
+                            show: true
+                        },
+                        range: ['2025-04']
+                    },
+                    series: [
+                        {
+                            id: 'label',
+                            type: 'scatter',
+                            name: "日期",
+                            coordinateSystem: 'calendar',
+                            symbolSize: 0,
+                            label: {
+                                show: true,
+                                formatter: function (params) {
+                                    return echarts.time.format(params.value[0], '{dd}', false);
+                                },
+                                offset: [-cellSize[0] / 2 + 10, -cellSize[1] / 2 + 10],
+                                fontSize: 14
+                            },
+                            data: scatterData
+                        },
+                        ...pieSeries
+                    ]
+                };
+
+                const chart333 = echarts.init(document.getElementById('r2'));
+                chart333.setOption(optionC);
 
 
             }
@@ -1142,70 +1298,91 @@
     };
 
 
-    function show1() {
+    function show_spot() {
 
-        const data13 = [
+        const data3 = [
             [623.7954938271605, 709.085324074074, 10, "点击会跳转到房态图"],
             [822.2521296296296, 610.3060030864198, 15, "事件B"]
         ]
-        const series1 = [
-            {
-                name: "涟漪图",
-                type: 'effectScatter',
-                coordinateSystem: 'geo',
-                geoIndex: 0,
-                symbolSize: function (params) {
-                    return (params[2] / 10) * 15 + 5;
-                },
-                itemStyle: {
-                    color: '#f00'
-                },
-                encode: {
-                    tooltip: 2
-                },
-                data: data13,
-                tooltip: {
-                    trigger: 'item',
-                    formatter: function (params) {
-                        const data = params.data;
-                        return `${data[3]}`;
-                    }
-                },
 
+        const geoCoordLines = [];
+
+// 生成经线（纵向）
+        for (let lon = 0; lon <= 1600; lon += 100) {
+            geoCoordLines.push({
+                coords: [
+                    [lon, 0],
+                    [lon, 800]
+                ],
+                lineStyle: {
+                    color: '#ccc',
+                    width: 2,
+                    type: 'dashed'
+                }
+            });
+        }
+
+// 生成纬线（横向）
+        for (let lat = 0; lat <= 800; lat += 100) {
+            geoCoordLines.push({
+                coords: [
+                    [0, lat],
+                    [1600, lat]
+                ],
+                lineStyle: {
+                    color: '#ccc',
+                    width: 2,
+                    type: 'dashed'
+                }
+            });
+        }
+
+
+        let linepart = {
+            type: 'lines',
+            coordinateSystem: 'geo',
+            geoIndex: 0,
+            data: geoCoordLines,
+            silent: true,
+            lineStyle: {
+                opacity: 1
+            }
+        }
+
+        let scatter = {
+            name: "涟漪图",
+            type: 'effectScatter',
+            coordinateSystem: 'geo',
+            geoIndex: 0,
+            symbolSize: function (params) {
+                return (params[2] / 10) * 15 + 5;
             },
-        ];
-
-        var option1 = {
+            itemStyle: {
+                color: '#0b6fde'
+            },
+            encode: {
+                tooltip: 2
+            },
+            data: data3,
             tooltip: {
                 trigger: 'item',
                 formatter: function (params) {
                     const data = params.data;
-                    return `
-                        <b>序号：</b>${data.index}<br/>
-                        <b>居委会：</b>${data.name}<br/>
-                        <b>地址：</b>${data.address}<br/>
-                        <b>电话：</b>${data.phone}
-                      `;
+                    return `${data[3]}`;
                 }
             },
-            geo: [
-                {
-                    map: 'cf',  // 设置地图
-                    roam: false,     // 启用缩放和平移
-                    layoutCenter: ['50%', '65%'], // 地图居中
-                    layoutSize: '200%',
-                    selectedMode: 'single',  // 单选模式
-                }
-            ],
 
-            series: series1
-
-            // 制作按钮结束
         }
-        myChart.setOption(option1);
+
+        series.push(linepart)
+        series.push(scatter)
+        option.series = series
+        myChart.setOption(option)
+
+
     }
 
-    function fgl() {
+    function cover_rate() {
         let data11 = [
             {
                 "userNum": 5116,
@@ -1952,7 +2129,8 @@
                     position: 'center',
                     formatter: '{b} \n {d}%',
                     color: "#000",
-                    backgroundColor: "#fff"
+                    backgroundColor: "#fff",
+
                 },
                 labelLine: {
                     show: false
@@ -1967,24 +2145,36 @@
                 data: [
                     {
                         value: data1, name: name, itemStyle: {
-                            color: "#0f0"
+                            color: "#66bb3b"
+                        }, emphasis: {
+                            label: {
+                                show: true,
+                                color: '#66bb3b',
+                                fontWeight: 'bold',
+                                fontSize: 30
+                            }
                         }
                     }, {
                         value: data2 - data1, name: name, itemStyle: {
                             color: "#f00"
+                        }, emphasis: {
+                            label: {
+                                show: true,
+                                color: '#f00', // B项高亮时，文字为蓝色
+                                fontWeight: 'bold',
+                                fontSize: 30
+                            }
                         }
                     }
                 ],
+                z: 3,
                 emphasis: {
                     itemStyle: {
                         shadowBlur: 10,
                         shadowOffsetX: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)'
-                    },
-                    label: {
-                        show: true,
-                        fontSize: 20,
-                        fontWeight: 'bold'
+                        shadowColor: 'rgba(0, 0, 0, 0.5)',
+
+
                     },
 
                 }
@@ -1996,27 +2186,14 @@
         );
 
 
-        let option3 = {
-            tooltip: {
-                trigger: 'item',
-            },
-            geo: [
-                {
-                    //         // map: 'cf',  // 设置地图
-                    roam: true,     // 启用缩放和平移
-                    //         // layoutCenter: ['50%', '65%'], // 地图居中
-                    //         // layoutSize: '200%',
-                    //         // selectedMode: 'single',  // 单选模式
-                }
-            ],
-
-            series: series3
-
-            // 制作按钮结束
-        };
-
         // 设置图表选项
-        myChart.setOption(option3);
+        series = series.concat(series3)
+        option.series = series
+        myChart.setOption(option)
+    }
+
+    function goto_community() {
+        window.location.href = "030HousePage.html";
     }
 
 
@@ -2050,9 +2227,9 @@
         }
     })
         .use(ElementPlus)
-        .mount('#base_info')
+        .mount('#c_info')
 </script>
-<script data-name="abcd">
+<script data-name="base_info">
     const App1 = {
         data() {
             return {
@@ -2061,11 +2238,32 @@
         }
     }
     const App1_1 = Vue.createApp(App1)
-    App1_1.use(ElementPlus).mount('#bb')
+    App1_1.use(ElementPlus).mount('#base_info')
+</script>
+<script data-name="rigt_part">
+    const App2 = {
+        data() {
+            return {
+                data: 123
+            }
+        }
+    }
+    const App1_2 = Vue.createApp(App2)
+    App1_2.use(ElementPlus).mount('#right-part')
+</script>
+<script data-name="bb">
+    const App3 = {
+        data() {
+            return {
+                data: 123
+            }
+        }
+    }
+    const App1_3 = Vue.createApp(App3)
+    App1_3.use(ElementPlus).mount('#bb')
 </script>
 
-<script data-name="r1">
-    // 工具：生成正态分布随机数（Box-Muller）
+<script data-name="age_gender">
     function randomNormal(mean, stdDev) {
         let u = 0, v = 0;
         while (u === 0) u = Math.random();
@@ -2074,145 +2272,1243 @@
         return Math.round(num * stdDev + mean);
     }
 
-    // 初始化
-    const minAge = 24, maxAge = 65;
-    const maleCount = 50, femaleCount = 150;
-
-    // 年龄桶
-    const ageRange = Array.from({length: maxAge - minAge + 1}, (_, i) => minAge + i);
-    const maleAges = Array(ageRange.length).fill(0);
-    const femaleAges = Array(ageRange.length).fill(0);
-
-    // 随机生成年龄数据
-    const meanAge = 42, stdDev = 10;
-
-    for (let i = 0; i < maleCount; i++) {
-        let age;
-        do {
-            age = randomNormal(meanAge, stdDev);
-        } while (age < minAge || age > maxAge);
-        maleAges[age - minAge]++;
+    function generateAgeBuckets(minAge, maxAge, step) {
+        const numBuckets = Math.floor((maxAge - minAge + 1) / step);
+        const ageRanges = Array.from({length: numBuckets}, (_, i) => {
+            const start = minAge + i * step;
+            const end = start + step - 1;
+            return `${start}-${end}`;
+        });
+        const buckets = Array(numBuckets).fill(0);
+        return {ageRanges, buckets};
     }
 
-    for (let i = 0; i < femaleCount; i++) {
-        let age;
-        do {
-            age = randomNormal(meanAge, stdDev);
-        } while (age < minAge || age > maxAge);
-        femaleAges[age - minAge]++;
+    function generateRandomAges(count, mean, stdDev, minAge, maxAge, step) {
+        const {ageRanges, buckets} = generateAgeBuckets(minAge, maxAge, step);
+        for (let i = 0; i < count; i++) {
+            let age;
+            do {
+                age = randomNormal(mean, stdDev);
+            } while (age < minAge || age > maxAge);
+            const bucketIndex = Math.floor((age - minAge) / step);
+            buckets[bucketIndex]++;
+        }
+        return buckets;
     }
 
-    const option = {
-        // title: {
-        //     text: 'Age Distribution by Gender'
-        // },
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: {type: 'shadow'}
+    function buildAgeChartOption(seriesData, ageRanges) {
+        return {
+            title: {
+                text: "社工年龄分布",
+                left: "center",
+                top: "10%"
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {type: 'shadow'}
+            },
+            legend: {
+                data: seriesData.map(s => s.name)
+            },
+            xAxis: {
+                type: 'category',
+                data: ageRanges,
+                name: 'Age Range'
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Count'
+            },
+            series: seriesData.map(s => ({
+                name: s.name,
+                type: 'bar',
+                stack: 'gender',
+                data: s.data,
+                color: s.color
+            }))
+        };
+    }
+
+    // 🎯 主函数：增加 step 参数
+    function generateAgeDistributionChartOption({
+                                                    male = 50,
+                                                    female = 150,
+                                                    mean = 42,
+                                                    stdDev = 10,
+                                                    minAge = 20,
+                                                    maxAge = 69,
+                                                    step = 10
+                                                } = {}) {
+        const {ageRanges} = generateAgeBuckets(minAge, maxAge, step);
+
+        const groups = [
+            {key: 'male', label: 'Male', color: '#546ec0', count: male},
+            {key: 'female', label: 'Female', color: '#e66464', count: female}
+        ];
+
+        const seriesData = groups.map(group => ({
+            name: group.label,
+            data: generateRandomAges(group.count, mean, stdDev, minAge, maxAge, step),
+            color: group.color
+        }));
+
+        return buildAgeChartOption(seriesData, ageRanges);
+    }
+
+    function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    const option1 = generateAgeDistributionChartOption({
+        male: randomInt(30, 60),
+        female: randomInt(120, 160),
+        step: 10 // 👈 每10岁为一个组
+    });
+
+    var myChart1 = echarts.init(document.getElementById('r1'));
+
+    myChart1.setOption(option1);
+
+
+</script>
+<script data-name="calender">
+    var optionC;
+
+    // This example requires ECharts v5.4.0 or later
+    const cellSize = [80, 80];
+    const pieRadius = 30;
+
+    function getVirtualData() {
+        const date = +echarts.time.parse('2025-04-01');
+        const end = +echarts.time.parse('2025-04-13');
+        const dayTime = 3600 * 24 * 1000;
+        const data = [];
+        for (let time = date; time < end; time += dayTime) {
+            data.push([
+                echarts.time.format(time, '{yyyy}-{MM}-{dd}', false)
+            ]);
+        }
+        return data;
+    }
+
+    const scatterData = getVirtualData();
+    const pieSeries = scatterData.map(function (item, index) {
+        let i = {
+            type: 'pie',
+            id: 'pie-' + index,
+            center: item[0],
+            radius: pieRadius,
+            coordinateSystem: 'calendar',
+            label: {
+                formatter: '{c}',
+                position: 'inside'
+            },
+            data: [
+                {name: '蓝色', value: Math.round(Math.random() * 20)},
+                {name: '绿色', value: Math.round(Math.random() * 140)},
+                {name: '黄色', value: Math.round(Math.random() * 80)},
+                {name: '红色', value: Math.round(Math.random() * 200)}
+            ]
+        };
+        return i
+    });
+    optionC = {
+        title: {
+            text: "微格分色服务情况，日历视图",
+            left: "center",
+            textStyle: {
+                fontSize: 25
+            }
         },
+        tooltip: {},
         legend: {
-            data: ['Male', 'Female']
+            data: ['蓝色', '绿色', '黄色', '红色'],
+            top: 30
         },
-        xAxis: {
-            type: 'category',
-            data: ageRange.map(String),
-            name: 'Age'
-        },
-        yAxis: {
-            type: 'value',
-            name: 'Count'
+        calendar: {
+            top: '80',
+            left: 'center',
+            orient: 'vertical',
+            cellSize: cellSize,
+            yearLabel: {
+                show: false,
+                fontSize: 20
+            },
+            dayLabel: {
+                margin: 10,
+                firstDay: 7,
+                nameMap: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            },
+            monthLabel: {
+                show: true
+            },
+            range: ['2025-04']
         },
         series: [
             {
-                name: 'Male',
-                type: 'bar',
-                stack: 'gender',
-                data: maleAges,
-                color: '#4A90E2'
+                id: 'label',
+                type: 'scatter',
+                name: "日期",
+                coordinateSystem: 'calendar',
+                symbolSize: 0,
+                label: {
+                    show: true,
+                    formatter: function (params) {
+                        return echarts.time.format(params.value[0], '{dd}', false);
+                    },
+                    offset: [-cellSize[0] / 2 + 10, -cellSize[1] / 2 + 10],
+                    fontSize: 14
+                },
+                data: scatterData
             },
+            ...pieSeries
+        ]
+    };
+
+    const chart333 = echarts.init(document.getElementById('r2'));
+    chart333.setOption(optionC);
+</script>
+<script data-name="radar">
+    // 工具函数：生成随机数（0-100之间）
+    function randomScore() {
+        return Math.floor(Math.random() * 101); // 0到100的整数
+    }
+
+    // 生成随机数据，人数为6到11
+    function generateRandomPeopleData(numPeople) {
+        const peopleData = [];
+        for (let i = 0; i < numPeople; i++) {
+            peopleData.push({
+                name: `居委 ${i + 1}`,
+                value: [
+                    randomScore(), // 沟通能力
+                    randomScore(), // 危机应对
+                    randomScore(), // 组织协调
+                    randomScore(), // 政策理解
+                    randomScore(), // 情绪管理
+                    randomScore()  // 资源链接
+                ]
+            });
+        }
+        return peopleData;
+    }
+
+    // 获取随机的社工能力数据
+    const peopleData = generateRandomPeopleData(27);
+    const option_radar = {
+        title: {
+            text: '社工能力评估雷达图',
+            left: 'center'
+        },
+        tooltip: {},
+        radar: {
+            indicator: [
+                {name: '沟通能力', max: 100},
+                {name: '危机应对', max: 100},
+                {name: '组织协调', max: 100},
+                {name: '政策理解', max: 100},
+                {name: '情绪管理', max: 100},
+                {name: '资源链接', max: 100}
+            ],
+            shape: 'circle',
+            radius: 100,
+            splitNumber: 5,
+            axisName: {
+                color: '#333',
+                fontSize: 14
+            }
+        },
+        series: [
             {
-                name: 'Female',
-                type: 'bar',
-                stack: 'gender',
-                data: femaleAges,
-                color: '#E94E77'
+                name: '能力评分',
+                type: 'radar',
+                data: peopleData,
+                areaStyle: {
+                    opacity: 0.2
+                }
             }
         ]
     };
 
-    const chart = echarts.init(document.getElementById('r1'));
-    chart.setOption(option);
+    // 渲染图表
+    const chart_radar = echarts.init(document.getElementById('radar'));
+    chart_radar.setOption(option_radar);
+
+
 </script>
-<script data-name="r2">
-    // 生成日期数组和随机值
-    function getDateList(startDate, endDate) {
-        const dateList = [];
-        const current = new Date(startDate);
-        const end = new Date(endDate);
-        while (current <= end) {
-            const y = current.getFullYear();
-            const m = String(current.getMonth() + 1).padStart(2, '0');
-            const d = String(current.getDate()).padStart(2, '0');
-            const dateStr = `${y}-${m}-${d}`;
-            const value = Math.floor(Math.random() * 100); // 0~99 随机值
-            dateList.push([dateStr, value]);
-            current.setDate(current.getDate() + 1);
+
+<script data-name="aed">
+    let aed_map = [
+        {
+            "name": "95弄",
+            "village": "宋家滩",
+            "position": "宋家滩门卫室",
+            "contact": "孙钟杉",
+            "tel": "62864687",
+            "value": [
+                786.3995977270743, 727.329236168307
+            ],
+            "index": 10,
+            "address": "大渡河路21弄16号1楼"
+        },
+        {
+            "name": "95弄",
+            "village": "冠龙",
+            "position": "冠龙门卫室",
+            "contact": "孙钟杉",
+            "tel": "62864687",
+            "value": [
+                862.7231713610913, 692.6682728845233
+            ],
+            "index": 10,
+            "address": "大渡河路21弄16号1楼"
+        },
+        {
+            "name": "长四二委",
+            "village": "星风花苑",
+            "position": "星风花苑门卫室（怒江路30弄）",
+            "contact": "程建国",
+            "tel": "17721382678",
+            "value": [
+                786.3995977270743, 727.329236168307
+            ],
+            "index": 6,
+            "address": "怒江路30弄3号105室"
+        },
+        {
+            "name": "长四二委",
+            "village": "海运",
+            "position": "星风花苑门卫室（怒江路30弄）",
+            "contact": "程建国",
+            "tel": "17721382678",
+            "value": [
+                786.3995977270743, 727.329236168307
+            ],
+            "index": 6,
+            "address": "怒江路30弄3号105室"
+        },
+        {
+            "name": "白玉一委",
+            "village": "白玉新村",
+            "position": "白一居委会",
+            "contact": "李文斌",
+            "tel": "15001748748",
+            "value": [
+                1252.8631322186761,
+                348.79071013563
+            ],
+            "index": 19,
+            "address": "白玉新村85号101室"
+        },
+        {
+            "name": "白玉一委",
+            "village": "白玉大楼",
+            "position": "大楼门卫处",
+            "contact": "李文斌",
+            "tel": "15001748748",
+            "value": [
+                786.3995977270743, 727.329236168307
+            ],
+            "index": 19,
+            "address": "白玉新村85号101室"
+        },
+        {
+            "name": "曹家巷",
+            "village": "曹家巷小区",
+            "position": "曹家巷居委会",
+            "contact": "金晓岚",
+            "tel": "13361867393",
+            "value": [
+                1144.6560952369705,
+                510.3740270395594
+            ],
+            "index": 13,
+            "address": "中山北路3676弄4号底楼"
+        },
+        {
+            "name": "长四一",
+            "village": "申安馨苑",
+            "position": "门卫室",
+            "contact": "王迪文",
+            "tel": "13916001063",
+            "value": [
+                786.3995977270743, 727.329236168307
+            ],
+            "index": 5,
+            "address": "怒江路131弄2号104室"
+        },
+        {
+            "name": "长四一",
+            "village": "金河苑",
+            "position": "门卫室",
+            "contact": "王迪文",
+            "tel": "13916001063",
+            "value": [
+                786.3995977270743, 727.329236168307
+            ],
+            "index": 5,
+            "address": "怒江路131弄2号104室"
+        },
+        {
+            "name": "普二",
+            "village": "曹宁小区",
+            "position": "门卫室",
+            "contact": "潘道光",
+            "tel": "13585539913",
+            "value": [
+                786.3995977270743, 727.329236168307
+            ],
+            "index": 16,
+            "address": "宁夏路312弄1号2室"
+        },
+        {
+            "name": "普二",
+            "village": "绿地世家",
+            "position": "白玉路门卫室",
+            "contact": "潘道光",
+            "tel": "13585539913",
+            "value": [
+                1385.277762454008,
+                322.02978188530903
+            ],
+            "index": 16,
+            "address": "宁夏路312弄1号2室"
+        },
+        {
+            "name": "师大三村",
+            "village": "华师大三村",
+            "position": "大渡河路门卫室",
+            "contact": "彭真卿",
+            "tel": "62652253",
+            "value": [
+                652.8053355685668, 426.1579607268532
+            ],
+            "index": 8,
+            "address": "金沙江路895弄60号301室"
+        },
+        {
+            "name": "师大三村",
+            "village": "建华大厦",
+            "position": "大渡河路652弄3号楼物业/门卫室",
+            "contact": "彭真卿",
+            "tel": "62652253",
+            "value": [
+                657.8328997090006, 468.48680719953796
+            ],
+            "index": 8,
+            "address": "金沙江路895弄60号301室"
+        },
+        {
+            "name": "紫御豪庭",
+            "village": "688弄一二期小区",
+            "position": "丹巴路门岗",
+            "contact": "苏莹",
+            "tel": "52788996",
+            "value": [
+                156.72354262511263, 437.27485541215975
+            ],
+            "index": 26,
+            "address": "同普路689弄5号三楼"
+        },
+        {
+            "name": "紫御豪庭",
+            "village": "689弄三期小区",
+            "position": "同普路689门岗",
+            "contact": "苏莹",
+            "tel": "52788996",
+            "value": [
+                95.63242289642241,
+                503.6155077860561
+            ],
+            "index": 26,
+            "address": "同普路689弄5号三楼"
+        },
+        {
+            "name": "紫御豪庭",
+            "village": "沁和苑",
+            "position": "同普路689门岗",
+            "contact": "苏莹",
+            "tel": "52788996",
+            "value": [
+                103.55878337373119, 503.8035343492858
+            ],
+            "index": 26,
+            "address": "同普路689弄5号三楼"
+        },
+        {
+            "name": "雅仕汇都",
+            "village": "雅仕名邸",
+            "position": "19号楼居委会一楼大厅",
+            "contact": "张龙",
+            "tel": "52855850",
+            "value": [
+                243.66204039899952,
+                437.3861670713435
+            ],
+            "index": 27,
+            "address": "泸定路555弄19号二楼"
+        },
+        {
+            "name": "雅仕汇都",
+            "village": "瑞仕璟庭",
+            "position": "2号楼物业大厅",
+            "contact": "张龙",
+            "tel": "52855850",
+            "value": [
+                243.66204039899952,
+                437.3861670713435
+            ],
+            "index": 27,
+            "address": "泸定路555弄19号二楼"
+        },
+        {
+            "name": "雅仕汇都",
+            "village": "长风汇都",
+            "position": "8号楼物业前台",
+            "contact": "张龙",
+            "tel": "52855850",
+            "value": [
+                178.62508455385662, 431.10847483502096
+            ],
+            "index": 27,
+            "address": "泸定路555弄19号二楼"
+        },
+        {
+            "name": "雅仕汇都",
+            "village": "和畅",
+            "position": "3号楼一楼大厅",
+            "contact": "张龙",
+            "tel": "52855850",
+            "value": [
+                192.23804878619646, 393.11811006748167
+            ],
+            "index": 27,
+            "address": "泸定路555弄19号二楼"
+        },
+        {
+            "name": "普四二",
+            "village": "普陀四村",
+            "position": "门卫室",
+            "contact": "王佳",
+            "tel": "62446154",
+            "value": [
+                1307.7846656398935, 271.0941599623892
+            ],
+            "index": 18,
+            "address": "白兰路88号"
+        },
+        {
+            "name": "普四二",
+            "village": "曹杨路623弄小号",
+            "position": "门卫室",
+            "contact": "王佳",
+            "tel": "62446154",
+            "value": [
+                1300.0665126946824, 214.33764962708844
+            ],
+            "index": 18,
+            "address": "白兰路88号"
+        },
+        {
+            "name": "新渡口",
+            "village": "新渡口",
+            "position": "新渡口居委会",
+            "contact": "薛云",
+            "tel": "62602971",
+            "value": [
+                941.2868167285947,
+                692.8324922694218
+            ],
+            "index": 9,
+            "address": "光复西路2213弄89号1楼"
+        },
+        {
+            "name": "新渡口",
+            "village": "2269或者文沁苑",
+            "position": "2269或者文沁苑",
+            "contact": "薛云",
+            "tel": "62602971",
+            "value": [
+                890.3835497882477, 743.6163449924297
+            ],
+            "index": 9,
+            "address": "光复西路2213弄89号1楼"
+        },
+        {
+            "name": "曹家村",
+            "village": "顺达公寓",
+            "position": "顺义路188号物业保安室",
+            "contact": "郭颖",
+            "tel": "18918961928",
+            "value": [
+                1374.2982418220502, 420.0677184556527
+            ],
+            "index": 21,
+            "address": "白玉路678弄7号203室"
+        },
+        {
+            "name": "曹家村",
+            "village": "海珀玉晖",
+            "position": "白玉路678弄海珀玉晖物业安保监控室",
+            "contact": "李琳",
+            "tel": "13701901694",
+            "value": [
+                1421.5735626909677, 493.74586003626735
+            ],
+            "index": 21,
+            "address": "白玉路678弄7号203室"
+        },
+        {
+            "name": "锦绿",
+            "village": "绿地世纪城一期",
+            "position": "宁夏路353弄大门门岗室",
+            "contact": "俞恺",
+            "tel": "18516261128",
+            "value": [
+                1404.9059790156402, 331.23004409151326
+            ],
+            "index": 23,
+            "address": "宁夏路353弄12号101室"
+        },
+        {
+            "name": "锦绿",
+            "village": "锦绿一期",
+            "position": "曹杨路303弄大门门岗室",
+            "contact": "俞恺",
+            "tel": "18516261128",
+            "value": [
+                1468.71940831686, 315.2683587595884
+            ],
+            "index": 23,
+            "address": "宁夏路353弄12号101室"
+        },
+        {
+            "name": "锦绿",
+            "village": "锦绿二期",
+            "position": "曹杨路255弄门卫室",
+            "contact": "俞恺",
+            "tel": "18516261128",
+            "value": [
+                1468.6664477670793, 310.1387512237132
+            ],
+            "index": 23,
+            "address": "宁夏路 353 弄 12 号 101 室"
+        },
+        {
+            "name": "海鑫",
+            "village": "海鑫公寓",
+            "position": "海鑫公寓门卫室",
+            "contact": "傅艳玲",
+            "tel": "62600095",
+            "value": [
+                1125.238866745601, 677.7720368287703
+            ],
+            "index": 11,
+            "address": "光复西路 2077 弄 32 号二楼"
+        },
+        {
+            "name": "海鑫",
+            "village": "黎金苑",
+            "position": "居委会",
+            "contact": "傅艳玲",
+            "tel": "62600095",
+            "value": [
+                1034.9839106783197, 697.7051026991201
+            ],
+            "index": 11,
+            "address": "光复西路 2077 弄 32 号二楼"
+        },
+        {
+            "name": "中山桥居委",
+            "village": "中山北路 3904、3924 弄",
+            "position": "中山北路 3904、3924 弄保安门岗",
+            "contact": "嵇德昆",
+            "tel": "13817698005",
+            "value": [
+                1155.620371075801, 582.8753492382776
+            ],
+            "index": 14,
+            "address": "凯旋北路 1888 弄 8 号 201 室"
+        },
+        {
+            "name": "中山桥居委",
+            "village": "中山润园",
+            "position": "中山润园保安监控室",
+            "contact": "嵇德昆",
+            "tel": "13817698005",
+            "value": [
+                1159.905815810657,
+                616.3935422502618
+            ],
+            "index": 14,
+            "address": "凯旋北路 1888 弄 8 号 201 室"
+        },
+        {
+            "name": "普四一",
+            "village": "江南名庐",
+            "position": "小门门卫室",
+            "contact": "池伟丽",
+            "tel": "18930372036",
+            "value": [
+                1346.6605192090901, 222.9533660073788
+            ],
+            "index": 17,
+            "address": "白玉路 100 号"
+        },
+        {
+            "name": "普四一",
+            "village": "普陀四村",
+            "position": "居委会",
+            "contact": "池伟丽",
+            "tel": "18930372036",
+            "value": [
+                1353.0637988495394,
+                243.24411681535972
+            ],
+            "index": 17,
+            "address": "白玉路 100 号"
+        },
+        {
+            "name": "普四一",
+            "village": "汽车公寓",
+            "position": "门卫室",
+            "contact": "池伟丽",
+            "tel": "18930372036",
+            "value": [
+                1369.348224958143, 181.10389632989327
+            ],
+            "index": 17,
+            "address": "白玉路 100 号"
+        },
+        {
+            "name": "隆德",
+            "village": "朝阳大楼",
+            "position": "光复西路 1145 弄 20 号朝阳大楼非机动车停车库",
+            "contact": "吴明静",
+            "tel": "52359419",
+            "value": [
+                1555.8464768687681, 505.19408470666644
+            ],
+            "index": 15,
+            "address": "光复西路 1145 弄 19 号"
+        },
+        {
+            "name": "隆德",
+            "village": "隆德小区",
+            "position": "居委会",
+            "contact": "吴明静",
+            "tel": "52359419",
+            "value": [
+                1538.3400570706726,
+                482.83569958478137
+            ],
+            "index": 15,
+            "address": "光复西路 1145 弄 19 号"
+        },
+        {
+            "name": "隆德",
+            "village": "水岸豪庭",
+            "position": "白玉路 669 弄 19 号 2 楼物业办公室",
+            "contact": "吴明静",
+            "tel": "52359419",
+            "value": [
+                1528.1537836782268, 533.3298609882565
+            ],
+            "index": 15,
+            "address": "光复西路 1145 弄 19 号"
+        },
+        {
+            "name": "长二一委",
+            "village": "风荷苑",
+            "position": "风荷苑后门门卫室",
+            "contact": "薛韵",
+            "tel": "62223425",
+            "value": [
+                710.4621811401319, 366.8385081141725
+            ],
+            "index": 2,
+            "address": "长风二村 137 号 101 室"
+        },
+        {
+            "name": "中江",
+            "village": "中江小区",
+            "position": "中江路 650 弄门卫室",
+            "contact": "徐敏",
+            "tel": "13817234616",
+            "value": [
+                395.82279418497154, 459.9105874556453
+            ],
+            "index": 12,
+            "address": "中江路 624-626 号"
+        },
+        {
+            "name": "长风一村",
+            "village": "金沙江路 65 弄小区",
+            "position": "小区正门安保室",
+            "contact": "马海明",
+            "tel": "13524109173",
+            "value": [
+                876.6798293677455, 376.08919208640845
+            ],
+            "index": 1,
+            "address": "长风一村 37 号"
+        },
+        {
+            "name": "长风一村",
+            "village": "长风一村",
+            "position": "小区正门安保室",
+            "contact": "马海明",
+            "tel": "13524109173",
+            "value": [
+                1054.6383453306657, 396.3651507343886
+            ],
+            "index": 1,
+            "address": "长风一村 37 号"
+        },
+        {
+            "name": "金沙",
+            "village": "汇德里",
+            "position": "顺义路 299 弄大门门卫室",
+            "contact": "程敏",
+            "tel": "62869103",
+            "value": [
+                1281.9766348985563, 387.1528649111484
+            ],
+            "index": 22,
+            "address": "顺义路南林家港 12 号底楼"
+        },
+        {
+            "name": "金沙",
+            "village": "白玉苑",
+            "position": "白玉路 358 弄大门门卫室",
+            "contact": "程敏",
+            "tel": "62869103",
+            "value": [
+                1281.9766348985563, 387.1528649111484
+            ],
+            "index": 22,
+            "address": "顺义路南林家港 12 号底楼"
+        },
+        {
+            "name": "金沙",
+            "village": "康泰公寓",
+            "position": "石湾路 7 弄东门门卫室",
+            "contact": "程敏",
+            "tel": "62869103",
+            "value": [
+                1245.3324907751116, 468.1710339977493
+            ],
+            "index": 22,
+            "address": "顺义路南林家港 12 号底楼"
+        },
+        {
+            "name": "金沙",
+            "village": "南林家港",
+            "position": "居委会",
+            "contact": "程敏",
+            "tel": "62869103",
+            "value": [
+                1334.1668053596704, 425.60372455891996
+            ],
+            "index": 22,
+            "address": "顺义路南林家港 12 号底楼"
+        },
+        {
+            "name": "白二",
+            "village": "白玉新村",
+            "position": "小区正门安保室",
+            "contact": "高勇",
+            "tel": "62224511",
+            "value": [
+                1329.6029155721865, 351.7862113010393
+            ],
+            "index": 20,
+            "address": "白玉新村 18 号 107 室"
+        },
+        {
+            "name": "白二",
+            "village": "达丰新村",
+            "position": "小区正门安保室",
+            "contact": "高勇",
+            "tel": "62224511",
+            "value": [
+                1304.5285135371628, 286.7494810226967
+            ],
+            "index": 20,
+            "address": "白玉新村 18 号 107 室"
+        },
+        {
+            "name": "长二二",
+            "village": "长风二村",
+            "position": "长风二村 46 号居委会",
+            "contact": "施达",
+            "tel": "13918585243",
+            "value": [
+                769.9070495754273,
+                336.6860038145435
+            ],
+            "index": 3,
+            "address": "长风二村 46 号"
+        },
+        {
+            "name": "长二二",
+            "village": "金阳怡景",
+            "position": "长风二村 46 号居委会",
+            "contact": "施达",
+            "tel": "13918585243",
+            "value": [
+                847.9075859266804, 307.1648525746513
+            ],
+            "index": 3,
+            "address": "长风二村 46 号"
+        },
+        {
+            "name": "长风三村",
+            "village": "枣阳路 465 弄",
+            "position": "小区正门安保室",
+            "contact": "盛琴燕",
+            "tel": "15821213371",
+            "value": [
+                846.2718357164656, 470.7710082757532
+            ],
+            "index": 4,
+            "address": "枣阳路 465 弄 12 号 101 室"
+        },
+        {
+            "name": "长风三村",
+            "village": "师大二村",
+            "position": "小区正门安保室",
+            "contact": "盛琴燕",
+            "tel": "15821213372",
+            "value": [
+                841.2971591180968, 397.0062143566672
+            ],
+            "index": 4,
+            "address": "枣阳路 465 弄 12 号 101 室"
+        },
+        {
+            "name": "长风三村",
+            "village": "枣阳路 530 弄小区",
+            "position": "小区正门安保室",
+            "contact": "盛琴燕",
+            "tel": "15821213373",
+            "value": [
+                857.0992562339189, 540.661642682323
+            ],
+            "index": 4,
+            "address": "枣阳路 465 弄 12 号 101 室"
+        },
+        {
+            "name": "世纪同乐",
+            "village": "世纪同乐",
+            "position": "顺义路 100 弄大门门卫室",
+            "contact": "赵亚敏",
+            "tel": "52360276",
+            "value": [
+                1457.826410615212, 386.5488847765706
+            ],
+            "index": 25,
+            "address": "顺义路 130 号三楼"
+        },
+        {
+            "name": "清水湾",
+            "village": "大华清水湾",
+            "position": "35 号楼物业",
+            "contact": "徐静",
+            "tel": "52682500",
+            "value": [
+                1213.5880476783361, 491.7878491787757
+            ],
+            "index": 24,
+            "address": "凯旋北路 1555 弄 70 号 2 楼"
+        },
+        {
+            "name": "清水湾",
+            "village": "清水湾三期",
+            "position": "居委会",
+            "contact": "徐静",
+            "tel": "52682500",
+            "value": [
+                1255.367996815674, 629.5440244541301
+            ],
+            "index": 24,
+            "address": "凯旋北路 1555 弄 70 号 2 楼"
+        },
+        {
+            "name": "师大一村",
+            "village": "中山北路 3671 弄",
+            "position": "小区大门安保室",
+            "contact": "杨莉",
+            "tel": "62232830",
+            "value": [
+                1137.6873579741962,
+                589.5165305624088
+            ],
+            "index": 7,
+            "address": "中山北路 3671 弄 1 号 101 室"
         }
-        return dateList;
-    }
+    ]
 
-    const data = getDateList("2025-02-01", "2025-04-30");
 
-    const option333 = {
-        tooltip: {
-            formatter: function (p) {
-                return `${p.data[0]}<br/>Value: ${p.data[1]}`;
+    function show_aed() {
+        series = [
+            {
+                name: 'aed',
+                type: 'scatter',
+                coordinateSystem: 'geo',
+                geoIndex: 0,
+                // symbol: 'circle',
+                symbol: 'image://aed.svg',
+                symbolSize: 40,
+                data: aed_map,
+                itemStyle: {
+                    color: 'green'
+                },
+                emphasis: {
+                    label: {
+                        color: '#000',      // 名称颜色
+                        backgroundColor: "#fff",
+                        fontSize: 50,        // 名称字体大小
+                        borderRadius: 10
+                    }
+
+                },
+                label: {
+                    show: true, // 显示名称
+                    position: 'top',  // 名称显示在点的右侧
+                    formatter: '{b}',   // 显示每个点的名称
+                    color: '#000',      // 名称颜色
+                    backgroundColor: "#fff",
+                    fontSize: 20,        // 名称字体大小
+                    borderRadius: 5
+                }
             }
-        },
-        visualMap: {
-            min: 0,
-            max: 100,
-            type: 'piecewise',
-            orient: 'horizontal',
-            left: 'center',
-            top: 40,
-            show: false
-        },
-        calendar: {
-            left: 50,
-            range: ['2025-02-01', '2025-04-30'],
-            cellSize: ["auto", 'auto'],
-            orient: "vertical",
-            splitLine: {
-                show: true,
-                lineStyle: {
-                    color: '#999',
-                    width: 1
+        ];
+        // 配置ECharts的Option
+        option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: function (params) {
+                    const data = params.data;
+                    return `
+                        <b>序号：</b>${data.index}<br/>
+                        <b>居委会：</b>${data.name}<br/>
+                        <b>居委会地址：</b>${data.address}<br/>
+                        <b>放置位置：</b>${data.position}<br/>
+                        <b>电话：</b>${data.tel}
+                      `;
                 }
             },
-            dayLabel: {
-                firstDay: 7,
-                nameMap: 'cn'
-            },
-            monthLabel: {
-                nameMap: 'cn'
-            },
-            itemStyle: {
-                borderWidth: 0.5,
-                borderColor: '#ccc'
-            }
-        },
-        series: {
-            type: 'heatmap',
-            coordinateSystem: 'calendar',
-            data: data
-        }
-    };
+            geo: [
+                {
+                    map: 'cf',  // 设置地图
+                    roam: true,     // 启用缩放和平移
+                    layoutCenter: ['50%', '65%'], // 地图居中
+                    layoutSize: '200%',
+                    selectedMode: 'single',  // 单选模式
+                }
+            ],
 
-    const chart333 = echarts.init(document.getElementById('r2'));
-    chart333.setOption(option333);
+
+            series: series
+
+            // 制作按钮结束
+        };
+
+        // 设置图表选项
+        myChart.setOption(option);
+        // 获得坐标点位置，并复制到剪切板
+        myChart.getZr().on('click', function (params) {
+            var pixelPoint = [params.offsetX, params.offsetY];
+            var dataPoint = myChart.convertFromPixel({geoIndex: 0}, pixelPoint);
+            // console.log(dataPoint);
+            navigator.clipboard.writeText(dataPoint).then(function () {
+                console.log('Data copied to clipboard:', dataPoint);
+            }).catch(function (err) {
+                console.error('Failed to copy data to clipboard:', err);
+            });
+
+        });
+        // 添加点击事件，跳转到指定 URL
+        myChart.on('click', function (params) {
+            // // console.log(params)
+            // if (params.seriesName === 'A组 - 居委会') {
+            //
+            //     // 查找对应的居委会数据
+            //     const community = data.find(item => item.name === params.data.name);
+            //     const infoElement = document.getElementById('c_describe');
+            //     infoElement.innerHTML = `
+            //         <b>居委会名称：</b>${community.name}    <a href="community.html?name=${community.name}" target="_blank">点击这里查看更多</a><br/>
+            //         <b>居委会地址：</b>${community.address}<br/>
+            //         <b>居委会电话：</b>${community.phone}<br/>
+            //         <div>
+            //             雅仕汇都居委会成立于2020年1月，总占地面积0.15平方公里，东至中江路，西至丹巴路，南至同普路，北至金沙江路，共有四个小区组成：雅仕名邸、长风汇都、瑞仕璟庭、和畅公寓。现有居民户数2567户，实际居住人口约6100人。党员127人，长护险13人左右，独居老人2人，其中孤老0人；残疾人17人；精访在册3人。
+            //             雅仕汇都居委会工作人员在日常“走四百”工作中，广泛听取社区居民建议后，收集民情民意，以“居民议事协商”为抓手，做到居民有需求，社区有回应。
+            //             居委会成立至今，突出特色和实效，有序开展各类活动：关心关爱社区高龄老人、独居老人等特殊群体；积极参加“创文创卫”创建工作，组织“清洁家园”、“文明修身”、“文明礼仪”等文明树新风活动；开展平安夜巡和反诈宣传，维护社区和谐稳定。一场场丰富多彩的活动让社区“活”起来、队伍“动”起来、群众“乐”起来。
+            //             和畅公寓新时代文明实践站位于丹巴路586弄和畅公寓3号楼201室。自成立以来，始终奉行“服务社区、弘扬新风”的宗旨，促进文明社区的创建，满足社区群众日益增长的文化生活需要，用微光温暖你我，用汗水守护家园。
+            //             雅仕汇都居委会获得荣誉：上海市妇女之家示范点（2020年年底）、上海市儿童友好社区示范点（2021年）、上海市节水型小区、全国防灾减灾示范社区、上海市无违建居村、上海市垃圾分类银奖。
+            //             近年来，雅仕汇都居民区党总支深化党建引领，与结对单位切实强化交流合作，全力构建“资源共享、优势互补、互相促进、共同发展”的党建共建联建崭新格局，定期与共建单位开展社区法律公益课堂、联合结对单位开展公益活动、慰问困难党员等。雅仕汇都居民区将以结对共建为抓手，充分挖掘和发挥各自的资源和优势，联手服务、联心发展，进一步做精做优基层治理服务，以更实举措回应居民群众美好生活新期盼。
+            //             下一步，雅仕汇都居委会将继续夯实阵地建设，扎实开展多层次、多样化的活动，扩大“服务圈”，织好“贴心网”，让文明之花绽放长风，不断提升人民群众的获得感、幸福感、安全感。
+            //         </div>
+            //       `
+            //     // const name = encodeURIComponent(params.data.name); // 获取居委会名称并进行URL编码
+            //     // window.open(`community.html?name=${name}`, '_blank'); // 使用正确的 URL 参数传递
+            //     const cdata = cList.find(item => item.orgName.includes(params.data.name));
+            //     console.log(cdata)
+            //     document.getElementById("c_info").style.display = "block"
+            //     const CinfoElement = document.getElementById('c_info');
+            //     CinfoElement.innerHTML =
+            //         `<div><strong>人口数：</strong>${cdata.userNum}</div>
+            //             <div><strong>户籍数：</strong>${cdata.localNum}</div>
+            //             <div><strong>居住数：</strong>${cdata.liveNum}</div>
+            //             <div><strong>楼宇数：</strong>${cdata.buildingNum}</div>
+            //             <div><strong>房屋数：</strong>${cdata.houseNum}</div>
+            //             <div><strong>小区数：</strong>${cdata.villageNum}</div>`
+            //
+            //     let male = randomInt(2, 4)
+            //     let female = randomInt(4, 6)
+            //     const option1 = generateAgeDistributionChartOption({
+            //         male: male,
+            //         female: female,
+            //         step: 10 // 👈 每10岁为一个组
+            //     });
+            //     var myChart1 = echarts.init(document.getElementById('r1'));
+            //     myChart1.setOption(option1);
+            //
+            //
+            //     // 获取随机的社工能力数据
+            //     const peopleData = generateRandomPeopleData(male + female);
+            //     const option_radar = {
+            //         title: {
+            //             subtext: '社工能力评估雷达图',
+            //             text: params.data.name,
+            //             left: 'center'
+            //         },
+            //         legend: {
+            //             bottom: "0"
+            //         },
+            //         tooltip: {},
+            //         radar: {
+            //             indicator: [
+            //                 {name: '沟通能力', max: 100},
+            //                 {name: '危机应对', max: 100},
+            //                 {name: '组织协调', max: 100},
+            //                 {name: '政策理解', max: 100},
+            //                 {name: '情绪管理', max: 100},
+            //                 {name: '资源链接', max: 100}
+            //             ],
+            //             shape: 'circle',
+            //             radius: 100,
+            //             splitNumber: 5,
+            //             axisName: {
+            //                 color: '#333',
+            //                 fontSize: 14
+            //             }
+            //         },
+            //         series: [
+            //             {
+            //                 name: '能力评分',
+            //                 type: 'radar',
+            //                 data: peopleData,
+            //                 areaStyle: {
+            //                     opacity: 0.1
+            //                 }
+            //             }
+            //         ]
+            //     };
+            //     // 渲染图表
+            //     const chart_radar = echarts.init(document.getElementById('radar'));
+            //     chart_radar.setOption(option_radar);
+            //
+            //
+            //     // calendar
+            //     const pieSeries = scatterData.map(function (item, index) {
+            //         let i = {
+            //             type: 'pie',
+            //             id: 'pie-' + index,
+            //             center: item[0],
+            //             radius: pieRadius,
+            //             coordinateSystem: 'calendar',
+            //             label: {
+            //                 formatter: '{c}',
+            //                 position: 'inside'
+            //             },
+            //             data: [
+            //                 {name: '蓝色', value: Math.round(Math.random() * 5)},
+            //                 {name: '绿色', value: Math.round(Math.random() * 20)},
+            //                 {name: '黄色', value: Math.round(Math.random() * 20)},
+            //                 {name: '红色', value: Math.round(Math.random() * 40)}
+            //             ]
+            //         };
+            //         return i
+            //     });
+            //     optionC = {
+            //         title: {
+            //             text: "微格分色服务情况，日历视图",
+            //             left: "center"
+            //         },
+            //         tooltip: {},
+            //         legend: {
+            //             data: ['蓝色', '绿色', '黄色', '红色'],
+            //             top: 30
+            //         },
+            //         calendar: {
+            //             top: '80',
+            //             left: 'center',
+            //             orient: 'vertical',
+            //             cellSize: cellSize,
+            //             yearLabel: {
+            //                 show: false,
+            //                 fontSize: 20
+            //             },
+            //             dayLabel: {
+            //                 margin: 10,
+            //                 firstDay: 7,
+            //                 nameMap: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            //             },
+            //             monthLabel: {
+            //                 show: true
+            //             },
+            //             range: ['2025-04']
+            //         },
+            //         series: [
+            //             {
+            //                 id: 'label',
+            //                 type: 'scatter',
+            //                 name: "日期",
+            //                 coordinateSystem: 'calendar',
+            //                 symbolSize: 0,
+            //                 label: {
+            //                     show: true,
+            //                     formatter: function (params) {
+            //                         return echarts.time.format(params.value[0], '{dd}', false);
+            //                     },
+            //                     offset: [-cellSize[0] / 2 + 10, -cellSize[1] / 2 + 10],
+            //                     fontSize: 14
+            //                 },
+            //                 data: scatterData
+            //             },
+            //             ...pieSeries
+            //         ]
+            //     };
+            //
+            //     const chart333 = echarts.init(document.getElementById('r2'));
+            //     chart333.setOption(optionC);
+            //
+            //
+            // }
+            // if (params.seriesName === 'B组') {
+            //     document.getElementById("activity_list").style.display = "block"
+            // }
+            // if (params.seriesType === 'effectScatter') {
+            //     // Redirect to the desired page
+            //     window.location.href = "030HousePage.html";
+            // }
+
+        });
+    }
+
+
 </script>
-
-
 </body>
 </html>
