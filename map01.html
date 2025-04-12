@@ -150,7 +150,7 @@
         <div id="r1" style="width: 100%;height: 300px;"></div>
         <div id="radar" style="width: 100%;height: 400px;"></div>
         <div id="friend" style="margin: 10px">
-            <el-carousel :interval="1500" indicator-position="inside" height="260px" style="border-radius: 10px">
+            <el-carousel :interval="1500" height="260px" style="border-radius: 10px">
                 <el-carousel-item v-for="item in 3" :key="item">
                     <h3 text="2xl" justify="center">共建单位{{ item }}</h3>
                 </el-carousel-item>
@@ -158,7 +158,9 @@
         </div>
     </div>
 
+
 </div>
+
 <div id="activity_list">
     <button class="close-btn" @click="hideApp">X</button>
     <el-table :data="tableData" style="width: 100%;" height="1200" border stripe>
@@ -498,6 +500,13 @@
             }
         ]
 
+        let data_fgl = [
+            {
+                value: 39.01,
+                name: '走访覆盖率'
+            }
+        ]
+
 
         series = [
             {
@@ -557,6 +566,72 @@
                     fontWeight: 800
                 }
             },
+            {
+                type: 'gauge',
+                name: '走访覆盖率',
+                center: ['90%', '85%'],
+                radius: '25%',
+                min: 0,
+                max: 100,
+                splitNumber: 5,
+                axisLine: {
+                    lineStyle: {
+                        width: 10,
+                        color: [
+                            [0.3, '#ec696a'],
+                            [0.6, '#de9d3c'],
+                            // [0.9, '#0b6fde'],
+                            [1, '#66bb3b']
+                        ]
+                    }
+                },
+                pointer: {
+                    icon: 'path://M12.8,0.7l12,40.1H0.7L12.8,0.7z',
+                    length: '60%',
+                    width: 10,
+                    offsetCenter: [0, 0],
+                    itemStyle: {
+                        color: 'auto'
+                    }
+                },
+                axisTick: {
+                    length: 12,
+                    lineStyle: {
+                        color: 'auto',
+                        width: 2
+                    }
+                },
+                splitLine: {
+                    length: 20,
+                    lineStyle: {
+                        color: 'auto',
+                        width: 5
+                    }
+                },
+                axisLabel: {
+                    color: '#464646',
+                    fontSize: 20,
+                    distance: -50,
+                    rotate: 'tangential',
+                    formatter: function (value) {
+                        return value + '%';
+                    }
+                },
+                title: {
+                    offsetCenter: [0, '+70%'],
+                    fontSize: 20
+                },
+                detail: {
+                    fontSize: 25,
+                    offsetCenter: [0, '+30%'],
+                    valueAnimation: true,
+                    formatter: function (value) {
+                        return value + '%';
+                    },
+                    color: 'inherit'
+                },
+                data: data_fgl
+            }
             // {
             //     name: "pie",
             //     type: "pie",
@@ -1147,6 +1222,11 @@
                     <div><strong>房屋数：</strong>${cdata.houseNum}</div>
                     <div><strong>小区数：</strong>${cdata.villageNum}</div>`
 
+                data_fgl[0].value = randomInt(11, 82)
+                myChart.setOption(option);
+
+
+                // 修改性别比例
                 let male = randomInt(2, 4)
                 let female = randomInt(4, 6)
                 const option1 = generateAgeDistributionChartOption({
@@ -1207,6 +1287,7 @@
                 const pieSeries = scatterData.map(function (item, index) {
                     let i = {
                         type: 'pie',
+                        // roseType: "radius",
                         id: 'pie-' + index,
                         center: item[0],
                         radius: pieRadius,
@@ -2118,6 +2199,7 @@
         function PieSeries(center, data1, data2, name) {
             return {
                 type: 'pie',
+                roseType: "radius",
                 name: name,
                 coordinateSystem: 'geo',
                 tooltip: {
@@ -2136,10 +2218,10 @@
                     show: false
                 },
                 animationDuration: 0,
-                radius: ['6%', '9%'],
+                radius: ['6%', '10%'],
                 avoidLabelOverlap: false,
                 itemStyle: {
-                    borderRadius: 10
+                    borderRadius: 7
                 },
                 center,
                 data: [
@@ -2546,7 +2628,7 @@
             "contact": "孙钟杉",
             "tel": "62864687",
             "value": [
-                786.3995977270743, 727.329236168307
+                788.9379049117387, 727.4904105008242
             ],
             "index": 10,
             "address": "大渡河路21弄16号1楼"
@@ -2570,7 +2652,7 @@
             "contact": "程建国",
             "tel": "17721382678",
             "value": [
-                786.3995977270743, 727.329236168307
+                684.9307506541825, 504.0592786438908
             ],
             "index": 6,
             "address": "怒江路30弄3号105室"
@@ -2578,11 +2660,11 @@
         {
             "name": "长四二委",
             "village": "海运",
-            "position": "星风花苑门卫室（怒江路30弄）",
+            "position": "海运门卫室",
             "contact": "程建国",
             "tel": "17721382678",
             "value": [
-                786.3995977270743, 727.329236168307
+                670.0167313962687, 585.130357686909
             ],
             "index": 6,
             "address": "怒江路30弄3号105室"
@@ -2594,8 +2676,7 @@
             "contact": "李文斌",
             "tel": "15001748748",
             "value": [
-                1252.8631322186761,
-                348.79071013563
+                1267.7797565489143, 374.7176358101121
             ],
             "index": 19,
             "address": "白玉新村85号101室"
@@ -2607,7 +2688,7 @@
             "contact": "李文斌",
             "tel": "15001748748",
             "value": [
-                786.3995977270743, 727.329236168307
+                1238.9793556307504, 382.9146729945126
             ],
             "index": 19,
             "address": "白玉新村85号101室"
@@ -2632,7 +2713,7 @@
             "contact": "王迪文",
             "tel": "13916001063",
             "value": [
-                786.3995977270743, 727.329236168307
+                745.9023559255072, 452.11635895324923
             ],
             "index": 5,
             "address": "怒江路131弄2号104室"
@@ -2644,7 +2725,7 @@
             "contact": "王迪文",
             "tel": "13916001063",
             "value": [
-                786.3995977270743, 727.329236168307
+                700.3125340436438, 383.7316261304542
             ],
             "index": 5,
             "address": "怒江路131弄2号104室"
@@ -2656,7 +2737,7 @@
             "contact": "潘道光",
             "tel": "13585539913",
             "value": [
-                786.3995977270743, 727.329236168307
+                1443.8200119400133, 251.1693499305046
             ],
             "index": 16,
             "address": "宁夏路312弄1号2室"
@@ -2730,7 +2811,7 @@
             "contact": "苏莹",
             "tel": "52788996",
             "value": [
-                103.55878337373119, 503.8035343492858
+                131.2284012639997, 532.959171932743
             ],
             "index": 26,
             "address": "同普路689弄5号三楼"
@@ -2755,8 +2836,7 @@
             "contact": "张龙",
             "tel": "52855850",
             "value": [
-                243.66204039899952,
-                437.3861670713435
+                178.99325120157857, 429.15280892964165
             ],
             "index": 27,
             "address": "泸定路555弄19号二楼"
@@ -2768,7 +2848,7 @@
             "contact": "张龙",
             "tel": "52855850",
             "value": [
-                178.62508455385662, 431.10847483502096
+                257.6197934026623, 442.5909253636801
             ],
             "index": 27,
             "address": "泸定路555弄19号二楼"
@@ -3252,35 +3332,127 @@
 
     function show_aed() {
         series = [
+            // {
+            //     name: 'aed',
+            //     type: 'scatter',
+            //     coordinateSystem: 'geo',
+            //     geoIndex: 0,
+            //     // symbol: 'circle',
+            //     symbol: 'image://aed.svg',
+            //     symbolSize: 40,
+            //     data: aed_map,
+            //     itemStyle: {
+            //         color: 'green'
+            //     },
+            //     emphasis: {
+            //         label: {
+            //             color: '#000',      // 名称颜色
+            //             backgroundColor: "#fff",
+            //             fontSize: 50,        // 名称字体大小
+            //             borderRadius: 10
+            //         }
+            //
+            //     },
+            //     label: {
+            //         show: false, // 显示名称
+            //         position: 'top',  // 名称显示在点的右侧
+            //         formatter: '{b}',   // 显示每个点的名称
+            //         color: '#000',      // 名称颜色
+            //         backgroundColor: "#fff",
+            //         fontSize: 20,        // 名称字体大小
+            //         borderRadius: 5
+            //     }
+            // },
             {
-                name: 'aed',
-                type: 'scatter',
+                type: 'custom',
                 coordinateSystem: 'geo',
                 geoIndex: 0,
-                // symbol: 'circle',
-                symbol: 'image://aed.svg',
-                symbolSize: 40,
+                zlevel: 1,
                 data: aed_map,
-                itemStyle: {
-                    color: 'green'
-                },
-                emphasis: {
-                    label: {
-                        color: '#000',      // 名称颜色
-                        backgroundColor: "#fff",
-                        fontSize: 50,        // 名称字体大小
-                        borderRadius: 10
+                renderItem(params, api) {
+                    const coord = api.coord([
+                        api.value(0, params.value),
+                        api.value(1, params.value)
+                    ]);
+                    const circles = [];
+                    for (let i = 0; i < 5; i++) {
+                        circles.push({
+                            type: 'circle',
+                            shape: {
+                                cx: 0,
+                                cy: 0,
+                                r: 30
+                            },
+                            style: {
+                                stroke: 'red',
+                                fill: 'none',
+                                lineWidth: 4
+                            },
+                            // Ripple animation
+                            keyframeAnimation: {
+                                duration: 4000,
+                                loop: true,
+                                delay: (-i / 4) * 4000,
+                                keyframes: [
+                                    {
+                                        percent: 0,
+                                        scaleX: 0,
+                                        scaleY: 0,
+                                        style: {
+                                            opacity: 1
+                                        }
+                                    },
+                                    {
+                                        percent: 1,
+                                        scaleX: 1,
+                                        scaleY: 0.4,
+                                        style: {
+                                            opacity: 0
+                                        }
+                                    }
+                                ]
+                            }
+                        });
                     }
-
-                },
-                label: {
-                    show: true, // 显示名称
-                    position: 'top',  // 名称显示在点的右侧
-                    formatter: '{b}',   // 显示每个点的名称
-                    color: '#000',      // 名称颜色
-                    backgroundColor: "#fff",
-                    fontSize: 20,        // 名称字体大小
-                    borderRadius: 5
+                    return {
+                        type: 'group',
+                        x: coord[0],
+                        y: coord[1],
+                        children: [
+                            ...circles,
+                            {
+                                type: 'path',
+                                shape: {
+                                    d: "m 25.762003,48.603294 3.799199,-9.023876 h -5.485081 l 10.135002,-11.329124 -4.167499,8.904567 h 5.522429 z m 12.29293,-24.888281 c -3.466691,0 -6.442661,2.088418 -7.754018,5.074244 -1.316025,-2.985826 -4.28992,-5.074244 -7.756093,-5.074244 -4.669114,0 -8.454307,3.783637 -8.454307,8.454826 0,9.269236 8.778515,17.816397 16.2104,21.594846 7.42981,-3.778449 16.20625,-12.32561 16.20625,-21.594846 0,-4.671189 -3.783637,-8.454826 -8.452232,-8.454826",
+                                    x: -15,
+                                    y: -35,
+                                    width: 30,
+                                    height: 30
+                                },
+                                style: {
+                                    fill: '#ff3300'
+                                },
+                                // Jump animation.
+                                keyframeAnimation: {
+                                    duration: 1000,
+                                    loop: true,
+                                    delay: Math.random() * 1000,
+                                    keyframes: [
+                                        {
+                                            y: -10,
+                                            percent: 0.5,
+                                            easing: 'cubicOut'
+                                        },
+                                        {
+                                            y: 0,
+                                            percent: 1,
+                                            easing: 'bounceOut'
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    };
                 }
             }
         ];
@@ -3294,6 +3466,7 @@
                         <b>序号：</b>${data.index}<br/>
                         <b>居委会：</b>${data.name}<br/>
                         <b>居委会地址：</b>${data.address}<br/>
+                        <b>小区名字：</b>${data.village}<br/>
                         <b>放置位置：</b>${data.position}<br/>
                         <b>电话：</b>${data.tel}
                       `;
