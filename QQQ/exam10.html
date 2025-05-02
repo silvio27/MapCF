@@ -241,6 +241,12 @@
                 >
                     随机上一题
                 </button>
+                <input
+                        type="number"
+                        v-model="qIndex"
+                        @blur="GotoQuestion"
+                        placeholder="输入题号"
+                >
                 <button
                         class="nav-button-random"
                         @click="randomQuestion"
@@ -10508,6 +10514,7 @@
             const currentQuestion = ref(questions[currentIndex.value]);
             const selectedOptions = ref([]);
             const showAnalysis = ref(false);
+            const qIndex = ref('')
 
             // 监听题目索引变化
             watch(currentIndex, (newVal) => {
@@ -10603,6 +10610,10 @@
                 if (currentIndex.value < questions.length - 1) currentIndex.value++;
             };
 
+            const GotoQuestion = () => {
+                currentIndex.value = qIndex.value - 1
+            }
+
             const randomQuestion = () => {
                 let index = Math.floor(Math.random() * (questions.length - 0) + 0)
                 // alert(index)
@@ -10624,7 +10635,9 @@
                 getOptionClass,
                 prevQuestion,
                 nextQuestion,
-                randomQuestion
+                randomQuestion,
+                GotoQuestion,
+                qIndex
             };
         }
     }).mount('#app');
