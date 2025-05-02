@@ -244,8 +244,10 @@
                 <input
                         type="number"
                         v-model="qIndex"
-                        @blur="GotoQuestion"
+                        @change="GotoQuestion"
                         placeholder="输入题号"
+                        @keyup.enter="GotoQuestion"
+
                 >
                 <button
                         class="nav-button-random"
