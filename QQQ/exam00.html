@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>完整刷题页面</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f2f5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h4 {
+            white-space: pre;
+        }
+
+        .question-container {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .question-type {
+            background: #409eff;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .question-index {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .content {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-button {
+            padding: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s;
+        }
+
+        .option-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .option-button.selected {
+            border-color: #409eff;
+            background: #ecf5ff;
+        }
+
+        .option-button.correct {
+            border-color: #67c23a;
+            background: #f0f9eb;
+        }
+
+        .option-button.wrong {
+            border-color: #f56c6c;
+            background: #fef0f0;
+        }
+
+        .option-button.partial {
+            border-color: #e6a23c;
+            background: #fdf6ec;
+        }
+
+        .submit-button {
+            margin-top: 20px;
+            padding: 12px 32px;
+            background: #409eff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+
+        .submit-button:hover {
+            background: #66b1ff;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            background: #0b6fde;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .nav-button-random {
+            padding: 10px 20px;
+            background: #de6f0b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .nav-button:disabled {
+            background: #c0c4cc;
+            cursor: not-allowed;
+        }
+
+        .analysis {
+            margin-top: 24px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .statistics {
+            margin-top: 16px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .result-message {
+            margin: 16px 0;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .correct-message {
+            background: #f0f9eb;
+            color: #67c23a;
+        }
+
+        .wrong-message {
+            background: #fef0f0;
+            color: #f56c6c;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="container">
+        <div class="question-container">
+            <input
+                    class="question-header"
+                    v-model="chapterIndex"
+                    @change="GotoChapter"
+                    placeholder="1"
+                    @keyup.enter="GotoChapter"
+            >
+            <!-- 题目头部 -->
+            <div class="question-header">
+                <span class="question-type">{{ questionTypeText }}</span>
+                <span class="question-index">{{ currentIndex + 1 }}/{{ questions.length }}</span>
+            </div>
+
+            <!-- 题目内容 -->
+            <div class="content" v-html="decodeContent(question.content)"></div>
+
+            <!-- 选项列表 -->
+            <div class="options">
+                <button
+                        v-for="(option, index) in question.questionOptionRspList"
+                        :key="option.id"
+                        class="option-button"
+                        :class="getOptionClass(option)"
+                        @click="toggleOption(option)"
+                        :disabled="showAnalysis"
+                >
+                        <span v-if="isMultiple">
+                            <input
+                                    type="checkbox"
+                                    style="pointer-events: none;"
+                            >
+                        </span>
+                    {{ String.fromCharCode(65 + index) }}. {{ decodeContent(option.content) }}
+                </button>
+            </div>
+
+            <!-- 多选题提交按钮 -->
+            <button
+                    v-if="isMultiple && !showAnalysis && selectedOptions.length > 0"
+                    class="submit-button"
+                    @click="submitAnswer"
+            >
+                提交答案
+            </button>
+
+            <!-- 答题结果 -->
+            <div
+                    v-if="showAnalysis"
+                    class="result-message"
+                    :class="isAllCorrect ? 'correct-message' : 'wrong-message'"
+            >
+                {{ isAllCorrect ? '🎉 回答正确！' : '❌ 回答错误！' }}
+            </div>
+            <!-- 导航按钮 -->
+            <div class="navigation">
+                <button
+                        class="nav-button"
+                        @click="prevQuestion"
+                        :disabled="currentIndex === 0"
+                >
+                    上一题
+                </button>
+                <button
+                        class="nav-button-random"
+                        @click="randomQuestion"
+                        :disabled="currentIndex === 0"
+                >
+                    随机上一题
+                </button>
+
+                <input
+                        type="number"
+                        v-model="qIndex"
+                        @change="GotoQuestion"
+                        placeholder="输入题号"
+                        @keyup.enter="GotoQuestion"
+
+                >
+                <button
+                        class="nav-button-random"
+                        @click="randomQuestion"
+                        :disabled="currentIndex === questions.length - 1"
+                >
+                    随机下一题
+                </button>
+                <button
+                        class="nav-button"
+                        @click="nextQuestion"
+                        :disabled="currentIndex === questions.length - 1"
+                >
+                    下一题
+                </button>
+            </div>
+
+            <!-- 答案解析 -->
+            <div v-if="showAnalysis" class="analysis">
+                <h4>{{question.questionChapterRsp.chapterName}}</h4>
+                <h4>
+                    {{question.questionChapterRsp.childChapterName}}&nbsp; &nbsp; &nbsp;
+                    {{question.questionChapterRsp.childKnowledgeName}}</h4>
+                <h3>📖 答案解析</h3>
+                <div v-html="question.analysis"></div>
+                <div class="statistics">
+                    <p>✅ 正确率：{{ question.rightRatio }}%</p>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+    const {createApp, ref, computed, watch, onMounted} = Vue;
+
+    // 静态题目数据
+
+
+    createApp({
+        setup() {
+            const questions = ref([])
+            const currentIndex = ref(0);
+            const selectedOptions = ref([]);
+            const showAnalysis = ref(false);
+            const qIndex = ref('')
+            const chapterIndex = ref(1)
+            let currentQuestion = ref({})
+
+
+            onMounted(async () => {
+                const url = 'https://raw.githubusercontent.com/silvio27/MapCF/refs/heads/main/QQQ/chapter/' + chapterIndex.value + '.json'
+
+                try {
+                    const response = await fetch(url)
+                    if (!response.ok) throw new Error('加载失败')
+                    const data = await response.json()
+                    questions.value = data
+                    console.log('题目加载成功:', questions.value)
+
+                    currentQuestion.value = questions.value[currentIndex.value];
+                } catch (error) {
+                    console.error('加载失败:', error)
+                }
+
+
+            })
+
+
+            // 监听题目索引变化
+            watch(currentIndex, (newVal) => {
+                currentQuestion.value = questions.value[newVal];
+                resetState();
+            });
+
+
+            // 判断是否多选题
+            const isMultiple = computed(() => {
+                return currentQuestion.value.baseQuestionType === 2;
+            });
+
+            // 题型显示文本
+            const questionTypeText = computed(() => {
+                return isMultiple.value ? '多选题' : '单选题';
+            });
+
+            // 解码Base64内容
+            const decodeContent = (str) => {
+                try {
+                    return decodeURIComponent(escape(atob(str)));
+                } catch (e) {
+                    return str;
+                }
+            };
+
+            // 处理选项切换
+            const toggleOption = (option) => {
+                if (!isMultiple.value) {
+                    selectedOptions.value = [option.id];
+                    showAnalysis.value = true;
+                } else {
+                    const index = selectedOptions.value.indexOf(option.id);
+                    if (index > -1) {
+                        selectedOptions.value.splice(index, 1);
+                    } else {
+                        selectedOptions.value.push(option.id);
+                    }
+                }
+            };
+
+            // 提交多选题答案
+            const submitAnswer = () => {
+                showAnalysis.value = true;
+            };
+
+            // 切换题目时重置状态
+            const resetState = () => {
+                selectedOptions.value = [];
+                showAnalysis.value = false;
+            };
+
+            // 获取选项样式
+            const getOptionClass = (option) => {
+                const isSelected = selectedOptions.value.includes(option.id);
+                const isCorrect = option.isCorrectAnswer;
+
+                if (!showAnalysis.value) {
+                    return {selected: isSelected};
+                }
+
+                return {
+                    correct: isCorrect,
+                    wrong: isSelected && !isCorrect,
+                    partial: isSelected && isCorrect && isMultiple.value
+                };
+            };
+
+            // 判断是否全部正确
+            const isAllCorrect = computed(() => {
+                if (!showAnalysis.value) return false;
+
+                const correctIds = currentQuestion.value.questionOptionRspList
+                    .filter(opt => opt.isCorrectAnswer)
+                    .map(opt => opt.id);
+
+                // 对多选题需要完全匹配
+                if (isMultiple.value) {
+                    return correctIds.length === selectedOptions.value.length &&
+                        correctIds.every(id => selectedOptions.value.includes(id));
+                }
+
+                // 单选题直接比较
+                return correctIds[0] === selectedOptions.value[0];
+            });
+
+            // 导航功能
+            const prevQuestion = () => {
+                if (currentIndex.value > 0) currentIndex.value--;
+            };
+
+            const nextQuestion = () => {
+                if (currentIndex.value <= questions.value.length - 1) {
+                    currentIndex.value++
+                }
+                ;
+            };
+
+
+            const GotoChapter = async () => {
+                const url = 'https://raw.githubusercontent.com/silvio27/MapCF/refs/heads/main/QQQ/chapter/' + chapterIndex.value + '.json'
+
+                try {
+                    const response = await fetch(url)
+                    if (!response.ok) throw new Error('加载失败')
+                    const data = await response.json()
+                    questions.value = data
+                    console.log('题目加载成功:', questions.value)
+                    alert("题库已更新到，第" + chapterIndex.value + "章")
+
+                    currentQuestion.value = questions.value[currentIndex.value];
+                } catch (error) {
+                    console.error('加载失败:', error)
+                }
+
+            }
+
+            const GotoQuestion = () => {
+                currentIndex.value = qIndex.value - 1
+            }
+
+            const randomQuestion = () => {
+                let index = Math.floor(Math.random() * (questions.value.length - 0) + 0)
+                // alert(index)
+                currentIndex.value = index
+            }
+
+            return {
+                currentIndex,
+                question: currentQuestion,
+                questions,
+                selectedOptions,
+                showAnalysis,
+                isMultiple,
+                questionTypeText,
+                isAllCorrect,
+                decodeContent,
+                toggleOption,
+                submitAnswer,
+                getOptionClass,
+                prevQuestion,
+                nextQuestion,
+                randomQuestion,
+                GotoQuestion,
+                qIndex,
+                chapterIndex,
+                GotoChapter,
+            };
+        }
+    }).mount('#app');
+</script>
+</body>
+</html>
