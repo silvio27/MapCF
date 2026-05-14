@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>长风新村街道“邻立方”楼道文化建设展示平台</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="data/buildings.js"></script>
+</head>
+<body>
+
+
+<!-- 独立房子浮窗模块 -->
+<div class="building-float-panel">
+    <img id="buildingPreviewImg" src="">
+</div>
+
+<!-- 鼠标跟随提示框 -->
+<div class="mouse-tooltip"></div>
+
+<div class="container">
+    <!-- header -->
+    <div class="header">
+        <img src="logo.jpg" class="top-logo" alt="邻立方">
+        <div class="header-text">
+            <h1>长风新村街道"邻立方"楼道文化建设成果展示</h1>
+            <p>党建引领·空间共享·多维联结·睦邻友好</p>
+        </div>
+    </div>
+
+    <div class="tab-nav">
+        <button class="tab-btn" data-view="category">楼组分类</button>
+        <button class="tab-btn active" data-view="map">地图视图</button>
+        <button class="tab-btn" data-view="list">楼道清单</button>
+        <button class="tab-btn" data-view="detail">详情预览</button>
+        <button class="tab-btn" data-view="admin">后台管理</button>
+    </div>
+
+    <div class="view" id="category-view">
+        <div class="category-grid" id="category-grid"></div>
+    </div>
+
+    <div class="view active" id="map-view">
+        <div class="map-wrapper">
+            <div class="map-container" id="map-box">
+                <div class="map-content" id="map-content"></div>
+            </div>
+
+            <div class="map-sidebar">
+                <div class="map-tag" data-type="联合接待楼组">联合接待楼组</div>
+                <div class="map-tag" data-type="多元共建楼组">多元共建楼组</div>
+                <div class="map-tag" data-type="儿童友好楼组">儿童友好楼组</div>
+                <div class="map-tag" data-type="资源共享楼组">资源共享楼组</div>
+                <div class="map-tag" data-type="共商共议楼组">共商共议楼组</div>
+                <div class="map-tag" data-type="邻里互助楼组">邻里互助楼组</div>
+                <button onclick="enableMapEdit()" class="edit-btn">进入点位编辑</button>
+                <button onclick="exportUpdatedJson()" class="export-btn">导出JS</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="view" id="list-view">
+        <div class="filter-bar">
+            <div class="filter-tag" data-filter="all">全部</div>
+            <div class="filter-tag" data-filter="联合接待楼组">联合接待</div>
+            <div class="filter-tag" data-filter="多元共建楼组">多元共建</div>
+            <div class="filter-tag" data-filter="儿童友好楼组">儿童友好楼组</div>
+            <div class="filter-tag" data-filter="资源共享楼组">资源共享楼组</div>
+            <div class="filter-tag" data-filter="共商共议楼组">共商共议楼组</div>
+            <div class="filter-tag" data-filter="邻里互助楼组">邻里互助楼组</div>
+        </div>
+        <div class="card-list" id="card-list"></div>
+    </div>
+
+    <div class="view" id="detail-view">
+        <div class="detail-back" onclick="backToList()">← 返回列表</div>
+        <div class="detail-header" id="detail-img"></div>
+        <div class="detail-main">
+            <div class="detail-content" id="detail-body"></div>
+            <div class="detail-carousel" id="detail-carousel" style="display: none;">
+                <div class="carousel-track" id="carousel-track"></div>
+            </div>
+        </div>
+        <button onclick="openDetailEdit()" class="detail-edit-btn">编辑此楼道</button>
+        <button onclick="exportUpdatedJson()" class="detail-export-btn">导出数据</button>
+    </div>
+
+    <div class="view" id="admin-view">
+        <div class="admin-form">
+            <h2>后台管理 - 添加楼道案例</h2>
+            <form id="addForm">
+                <div class="form-group"><label>楼道名称</label><input type="text" id="a_name" required></div>
+                <div class="form-group">
+                    <label>图片编号</label>
+                    <input type="number" id="a_img" readonly>
+                    <span class="auto-hint">自动编号：下一个可用编号</span>
+                </div>
+                <div class="form-group">
+                    <label>坐标选择</label>
+                    <div class="coord-display">
+                        <span>X: <span id="coord-x">未选择</span></span>
+                        <span>Y: <span id="coord-y">未选择</span></span>
+                    </div>
+                    <input type="hidden" id="a_x" required>
+                    <input type="hidden" id="a_y" required>
+                    <button type="button" class="coord-btn" onclick="goToMapForCoord()">点击在地图上选择位置</button>
+                </div>
+                <div class="form-group">
+                    <label>分类</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="types" value="联合接待楼组">联合接待</label>
+                        <label><input type="checkbox" name="types" value="多元共建楼组">多元共建</label>
+                        <label><input type="checkbox" name="types" value="儿童友好楼组">儿童友好</label>
+                        <label><input type="checkbox" name="types" value="资源共享楼组">资源共享</label>
+                        <label><input type="checkbox" name="types" value="共商共议楼组">共商共议</label>
+                        <label><input type="checkbox" name="types" value="邻里互助楼组">邻里互助</label>
+                    </div>
+                </div>
+                <div class="form-group"><label>简介</label><textarea id="a_desc" required></textarea></div>
+                <div class="form-group"><label>案例故事</label><textarea id="a_story"></textarea></div>
+                <div class="form-group"><label>工作法</label><textarea id="a_method"></textarea></div>
+                <div class="form-group"><label>经验总结</label><textarea id="a_summary"></textarea></div>
+                <button type="submit" class="submit-btn">添加</button>
+            </form>
+            <div class="export-section" style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+                <h3>数据导出</h3>
+                <div class="export-buttons">
+                    <button type="button" class="export-btn" onclick="exportCurrentBuilding()">下载当前数据 (31.js)</button>
+                    <button type="button" class="export-btn" onclick="exportAllBuildings()">下载全部数据 (buildings31.js)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/data-loader.js"></script>
+<script src="js/script.js"></script>
+<script src="js/map-editor.js"></script>
+</body>
+</html>
