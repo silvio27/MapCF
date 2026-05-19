@@ -25,6 +25,78 @@ const typeColorMap = {
     "邻里互助楼组": "rgb(117,184,67)"
 };
 
+// 六个一工作法详情数据
+const sixOneMethods = {
+    yige: {
+        title: "一核：党建引领，定航向",
+        subtitle: "工作的“方向标”",
+        content: `<p>基层治理，党建引领是关键。我们始终坚持把党建工作贯穿于楼道文化建设的全过程，打破“党组织只在社区层面发力”的局限，将党建触角延伸到每一个楼道，构建“居民区党组织+楼道党小组+党员骨干”三级联动体系，让党员主动亮身份、做表率，成为楼道文化建设的“主心骨”和“排头兵”。</p>
+                  <div class="case-section">
+                    <h4>案例：</h4>
+                    <p>中江小区通过党建引领，打造了特色楼道文化，党员带头参与楼道建设，形成了良好的邻里氛围。</p>
+                  </div>`
+    },
+    yidui: {
+        title: "一队：队伍培育，聚合力",
+        subtitle: "工作推进的“主力军”",
+        content: `<p>楼道文化建设不是社区的“独角戏”，也不是党员骨干的“单打独斗”，需要居民全员参与。只有让居民从“旁观者”转变为“参与者”“主导者”，才能让楼道文化建设真正贴合居民需求，才能实现长效治理。</p>
+                  <p>我们通过自愿报名、居民推荐、定向邀请等方式，培育了一支由党员骨干、退休干部、社区达人、热心居民、共建单位代表组成的多元自治队伍，涵盖老中青各个年龄段，涉及文化、法律、医疗、手工、烹饪等多个领域。让每一位成员都能发挥自身优势、贡献自身力量。</p>
+                  <div class="case-section">
+                    <h4>案例：</h4>
+                    <p>通过多元自治队伍的努力，成功组织了多场社区活动，增进了邻里感情。</p>
+                  </div>`
+    },
+    yiyi: {
+        title: "一议：民情收集，集民智",
+        subtitle: "工作的“出发点”和“落脚点”",
+        content: `<p>坚持“问需于民、问计于民、问效于民”，建立了“线上+线下”的民情收集机制，确保居民的每一个诉求都能被听到、每一个建议都能被重视。</p>
+                  <p>线下，组织社区工作人员、党员骨干、自治队伍成员，开展常态化“四百”走访，走进每一户居民家中，与居民面对面交流，倾听大家的心声、了解大家的需求——无论是楼道改造的建议，还是邻里矛盾的诉求，无论是养老服务的需求，还是儿童成长的期盼，我们都一一记录、分类梳理。同时，我们设立“墙上议事厅”，在楼道设置留言板，让居民把需求、问题、意见直接写在墙上，实现“民意上墙、诉求落地”。</p>
+                  <p>线上，我们依托社区微信群、社区云小程序开通“小事快办”，居民可以随时拍照、留言，反馈身边的问题、提出自己的建议。</p>
+                  <div class="case-section">
+                    <h4>案例：</h4>
+                    <p>通过民情收集机制，成功解决了多个居民反映的问题，提升了居民满意度。</p>
+                  </div>`
+    },
+    yiyu: {
+        title: "一隅：空间优化，融温情",
+        subtitle: "工作的“载体”",
+        content: `<p>“隅”就是角落、边角，我们始终坚信，“小角落”也能发挥“大作用”，“小空间”也能承载“大温情”。把楼道里的“闲置空间”“卫生死角”，打造成有温度、有内涵、有特色的“微空间”，让楼道不再是冰冷的通行通道，而是充满温情的“邻里驿站”，让居民在举手投足间都能感受到温暖与关怀。</p>
+                  <p>根据不同楼道的人群结构、居民需求，对楼道空间进行个性化、精准化优化，打造了共享会客厅、图书角、作品展示墙、休闲驿站等多种特色空间，让每一处角落都能发挥最大价值，让每一位居民都能找到属于自己的“小天地”。</p>
+                  <div class="case-section">
+                    <h4>案例：</h4>
+                    <p>通过空间优化，多个楼道焕然一新，成为居民喜爱的公共空间。</p>
+                    <p>儿童:打造作品展示墙、卡通装饰区，让孩子们的绘画、手工作品有了展示的平台，让楼道成为孩子们的“快乐天地”；</p>
+                    <p>老年:打造休闲驿站、便民服务角，摆放休闲座椅、急救箱，方便老年人休息、应急；</p>
+                    <p>青年:打造共享会客厅、共享书架，为年轻人提供交流、阅读的空间。</p>
+                  </div>`
+    },
+    yipin: {
+        title: "一品：品牌打造，聚人气",
+        subtitle: "工作的“内容”",
+        content: `<p>“一楼一特色、一梯一文化”，结合每类楼道的人群结构、居民需求，打造具有辨识度、有影响力的楼道文化品牌，让楼道文化有内涵、有特色、有人气，让每一个楼道都有自己的“文化名片”，让居民在文化熏陶中增进感情、凝聚人心。</p>
+                  <p>我们的品牌打造，从来不是“千篇一律”，而是“精准定位、按需打造”每一个品牌，都有具体的活动载体、具体的服务内容，都能精准满足不同人群的需求，都能吸引居民主动参与。</p>
+                  <div class="case-section">
+                    <h4>案例：</h4>
+                    <p>“银龄晨光”数字增能品牌，帮助老年人跨越数字鸿沟；</p>
+                    <p>“和畅团”，针对年轻人，我们打造兴趣品牌，打破社交壁垒；</p>
+                    <p>“巷心力”品牌，培养儿童的自治意识。</p>
+                    <p>“榜样课堂”依托华师大退休老教师力量，深耕儿童成长课堂，以师者初心引领少年向上向善。</p>
+                  </div>`
+    },
+    yili: {
+        title: "一励：长效激励，提干劲",
+        subtitle: "工作持续推进的“机制保障”",
+        content: `<p>楼道文化建设需要建立长效激励机制，让参与治理的居民有成就感、有荣誉感、有获得感，激发大家的参与热情，让楼道文化建设持续推进。</p>
+                  <p>建立“正向激励+典型引领”的长效激励机制：</p>
+                  <p>一是开展优秀评选活动，定期评选“优秀楼道”“热心居民”，为获奖对象颁发荣誉证书、发放小礼品，让大家感受到“付出有回报、奉献有荣誉”；</p>
+                  <p>二是创新设立“邻立方”社区微基金，以“不设起点捐款、短平快流程、人人为主理人”的模式，鼓励自愿捐款，用于楼道文化建设、便民服务、困难帮扶等，让居民成为楼道建设的“主人”，增强居民的归属感和责任感。让居民从“被动参与”转变为“主动参与”，为楼道文化建设注入了源源不断的动力。</p>
+                  <div class="case-section">
+                    <h4>案例：</h4>
+                    <p>通过长效激励机制，居民参与热情持续高涨，楼道文化建设成果显著。</p>
+                  </div>`
+    }
+};
+
 async function loadData() {
   // 使用 waitForData 确保所有数据加载完成
   if (typeof waitForData === 'function') {
@@ -70,6 +142,7 @@ function init() {
     filterList();
     bindAdminForm();
     initBuildingPanel();
+    initSixOneMethod();
     
     // 确保 DOM 完全渲染后再渲染地图点位
     requestAnimationFrame(() => {
@@ -80,6 +153,54 @@ function init() {
     
     // 添加窗口resize事件监听，实现响应式点位坐标
     window.addEventListener('resize', debounce(updateMapTransform, 100));
+}
+
+// 六个一工作法交互
+function initSixOneMethod() {
+    // Tab切换事件
+    document.querySelectorAll('.switch-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.switch-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(btn.dataset.tab + '-tab').classList.add('active');
+        });
+    });
+    
+    // 工作法项点击事件
+    document.querySelectorAll('.six-one-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const methodId = item.dataset.method;
+            const methodData = sixOneMethods[methodId];
+            
+            if (methodData) {
+                // 切换到详情标签
+                document.querySelector('.switch-btn[data-tab="method-detail"]').click();
+                
+                // 更新选中状态
+                document.querySelectorAll('.six-one-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                
+                // 更新详情面板配色
+                const panel = document.getElementById('method-detail-panel');
+                const header = document.querySelector('.method-detail-header');
+                const methodClasses = ['yige', 'yidui', 'yiyi', 'yiyu', 'yipin', 'yili'];
+                
+                methodClasses.forEach(cls => {
+                    panel.classList.remove(cls);
+                    header.classList.remove(cls);
+                });
+                
+                panel.classList.add(methodId);
+                header.classList.add(methodId);
+                
+                // 更新详情内容
+                document.getElementById('method-title').textContent = methodData.title;
+                document.getElementById('method-subtitle').textContent = methodData.subtitle;
+                document.getElementById('method-content').innerHTML = methodData.content;
+            }
+        });
+    });
 }
 
 // 防抖函数，避免resize事件频繁触发

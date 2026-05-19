@@ -38,7 +38,51 @@
     </div>
 
     <div class="view" id="category-view">
-        <div class="category-grid" id="category-grid"></div>
+        <div class="category-layout">
+            <!-- 左侧：六个一工作法 -->
+            <div class="six-one-section">
+                <div class="six-one-card">
+                    <!-- <h3 class="six-one-title">六个一工作法</h3>
+                    <p class="six-one-desc">党建引领·空间共享·多维联结·睦邻友好</p> -->
+                    <img class="six-one-image" src="llf61.png" alt="六个一工作法">
+                    <div class="six-one-list">
+                        <div class="six-one-item yige" data-method="yige">一核：党建引领，定航向</div>
+                        <div class="six-one-item yidui" data-method="yidui">一队 ：队伍培育，聚合力</div>
+                        <div class="six-one-item yiyi" data-method="yiyi">一议 ：民情收集，集民智</div>
+                        <div class="six-one-item yiyu" data-method="yiyu">一隅 ：空间优化，融温情</div>
+                        <div class="six-one-item yipin" data-method="yipin">一品 ：品牌打造，聚人气</div>
+                        <div class="six-one-item yili" data-method="yili">一励 ：长效激励，提干劲</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧：6类楼组 + 工作法详情 -->
+            <div class="building-categories">
+                <div class="tab-switch">
+                    <button class="switch-btn active" data-tab="categories">6类楼组</button>
+                    <button class="switch-btn" data-tab="method-detail">工作法详情</button>
+                </div>
+                
+                <!-- 6类楼组 -->
+                <div class="tab-content active" id="categories-tab">
+                    <h3 class="category-section-title">6类楼组</h3>
+                    <div class="category-grid" id="category-grid"></div>
+                </div>
+                
+                <!-- 工作法详情 -->
+                <div class="tab-content" id="method-detail-tab">
+                    <div class="method-detail-panel" id="method-detail-panel">
+                        <div class="method-detail-header">
+                            <h3 id="method-title">请选择一个工作法</h3>
+                            <p id="method-subtitle">点击左侧工作法标签查看详情</p>
+                        </div>
+                        <div class="method-detail-content" id="method-content">
+                            <p>欢迎了解"六个一"工作法的详细内容</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="view active" id="map-view">

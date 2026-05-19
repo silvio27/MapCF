@@ -10,14 +10,299 @@ body {
     position: relative;
 }
 
-/* 楼组分类视图 */
-.category-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+/* 楼组分类视图 - 双栏布局 */
+.category-layout {
+    display: flex;
+    gap: 24px;
     width: 100%;
     max-width: 1400px;
     margin: 0 auto;
+}
+
+/* 左侧：六个一工作法 */
+.six-one-section {
+    width: 36%;
+    flex-shrink: 0;
+}
+
+.six-one-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    color: #333;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 1px solid #eee;
+    height: 100%;
+}
+
+.six-one-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    border: none;
+    background: #f8f9fa;
+}
+
+.six-one-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.six-one-desc {
+    font-size: 13px;
+    opacity: 0.8;
+    margin-bottom: 16px;
+    color: #666;
+}
+
+.six-one-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.six-one-item {
+    background: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid;
+}
+
+/* 六个一工作法标签颜色 */
+.six-one-item.yige {
+    border-color: rgb(217,47,46);
+    color: rgb(217,47,46);
+}
+.six-one-item.yige:hover,
+.six-one-item.yige.active {
+    background: rgb(217,47,46);
+    color: white;
+}
+
+.six-one-item.yidui {
+    border-color: rgb(0,162,205);
+    color: rgb(0,162,205);
+}
+.six-one-item.yidui:hover,
+.six-one-item.yidui.active {
+    background: rgb(0,162,205);
+    color: white;
+}
+
+.six-one-item.yiyi {
+    border-color: rgb(114,53,126);
+    color: rgb(114,53,126);
+}
+.six-one-item.yiyi:hover,
+.six-one-item.yiyi.active {
+    background: rgb(114,53,126);
+    color: white;
+}
+
+.six-one-item.yiyu {
+    border-color: rgb(233,132,44);
+    color: rgb(233,132,44);
+}
+.six-one-item.yiyu:hover,
+.six-one-item.yiyu.active {
+    background: rgb(233,132,44);
+    color: white;
+}
+
+.six-one-item.yipin {
+    border-color: rgb(218,15,115);
+    color: rgb(218,15,115);
+}
+.six-one-item.yipin:hover,
+.six-one-item.yipin.active {
+    background: rgb(218,15,115);
+    color: white;
+}
+
+.six-one-item.yili {
+    border-color: rgb(117,184,67);
+    color: rgb(117,184,67);
+}
+.six-one-item.yili:hover,
+.six-one-item.yili.active {
+    background: rgb(117,184,67);
+    color: white;
+}
+
+/* 右侧：6类楼组 */
+.building-categories {
+    flex: 1;
+}
+
+/* Tab切换 */
+.tab-switch {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    background: #f5f7fa;
+    padding: 6px;
+    border-radius: 8px;
+}
+
+.switch-btn {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.switch-btn.active {
+    background: white;
+    color: #165DFF;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.category-section-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 16px;
+    padding-left: 8px;
+    border-left: 4px solid #165DFF;
+}
+
+/* 工作法详情面板 */
+.method-detail-panel {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    overflow: hidden;
+    border: 2px solid;
+}
+
+/* 工作法详情面板配色 */
+.method-detail-panel.yige {
+    border-color: rgb(217,47,46);
+}
+.method-detail-panel.yidui {
+    border-color: rgb(0,162,205);
+}
+.method-detail-panel.yiyi {
+    border-color: rgb(114,53,126);
+}
+.method-detail-panel.yiyu {
+    border-color: rgb(233,132,44);
+}
+.method-detail-panel.yipin {
+    border-color: rgb(218,15,115);
+}
+.method-detail-panel.yili {
+    border-color: rgb(117,184,67);
+}
+
+.method-detail-header {
+    padding: 20px 24px;
+    color: white;
+}
+
+.method-detail-header.yige {
+    background: rgb(217,47,46);
+}
+.method-detail-header.yidui {
+    background: rgb(0,162,205);
+}
+.method-detail-header.yiyi {
+    background: rgb(114,53,126);
+}
+.method-detail-header.yiyu {
+    background: rgb(233,132,44);
+}
+.method-detail-header.yipin {
+    background: rgb(218,15,115);
+}
+.method-detail-header.yili {
+    background: rgb(117,184,67);
+}
+
+.method-detail-header h3 {
+    font-size: 20px;
+    margin: 0 0 8px 0;
+}
+
+.method-detail-header p {
+    font-size: 14px;
+    opacity: 0.9;
+    margin: 0;
+}
+
+.method-detail-content {
+    padding: 24px;
+}
+
+.method-detail-content p {
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 16px;
+    text-indent: 2em;
+}
+
+.method-detail-content .case-section {
+    background: #f9fafb;
+    border-left: 4px solid #FF6B6B;
+    padding: 16px;
+    margin: 16px 0;
+    border-radius: 0 8px 8px 0;
+}
+
+.method-detail-content .case-section h4 {
+    color: #333;
+    margin: 0 0 8px 0;
+    font-size: 14px;
+}
+
+.method-detail-content .case-section p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+/* 工作法项选中状态 */
+.six-one-item {
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.six-one-item:hover {
+    transform: scale(1.05);
+}
+
+.six-one-item.active {
+    background: linear-gradient(135deg, #165DFF 0%, #0E42D2 100%);
+    box-shadow: 0 4px 12px rgba(22, 93, 255, 0.4);
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
 }
 
 .category-card {
@@ -39,11 +324,11 @@ body {
 }
 
 .category-image {
-    width: 100%;
+    width: 80%;
     flex: 1;
-    min-height: 300px;
+    min-height: 180px;
     border-radius: 8px;
-    margin-bottom: 12px;
+    margin: 0 auto 12px;
     object-fit: cover;
 }
 
@@ -57,6 +342,31 @@ body {
 .category-count {
     font-size: 14px;
     color: #666;
+}
+
+/* 响应式布局 */
+@media (max-width: 1024px) {
+    .category-layout {
+        flex-direction: column;
+    }
+    
+    .six-one-section {
+        width: 100%;
+    }
+    
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .category-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .six-one-list {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* 左上角 LOGO */
